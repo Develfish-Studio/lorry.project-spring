@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 
 import {{package.name}}.model.{{projection.name}}.{{resource.pascal_name}}Model;
 
-import org.ntr1x.common.api.views.Views;
+import studio.develfish.guppy.common.api.views.Views;
 
 import java.util.Collection;
 

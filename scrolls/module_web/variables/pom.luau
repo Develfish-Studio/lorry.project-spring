@@ -1,4 +1,4 @@
-{
+return {
   artifact_id = "service_api",
   parent = {
     group_id = "org.example",

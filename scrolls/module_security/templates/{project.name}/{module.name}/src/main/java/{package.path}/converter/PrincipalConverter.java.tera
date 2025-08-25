@@ -2,7 +2,7 @@ package {{package.name}}.converter;
 
 import lombok.RequiredArgsConstructor;
 import {{package.name}}.model.PrincipalModel;
-import org.ntr1x.common.api.component.AppConverter;
+import studio.develfish.guppy.common.api.component.AppConverter;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Component;

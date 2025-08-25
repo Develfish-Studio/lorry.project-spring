@@ -1,24 +1,23 @@
-local Meta = require('@develfish-repo.core/Meta')
-local Wrapper = require('@develfish-repo.core/Wrapper')
-local Project = require('@develfish-repo.core/Project')
+--!strict
 
-export type POM = Wrapper.Unwrappable<Unwrapped> & {
-  __type: 'POM',
+local Meta = require('@develfish-repo.utils/lib/Meta')
+local Project = require('@develfish-repo.project/lib/Project')
+local Wrapper = require('@develfish-repo.project/lib/Wrapper')
+
+local POM = {}
+
+export type POM = typeof(POM)
+
+export type POMProps = {
   project: Project.Project,
   group_id: string,
   artifact_id: string,
-  version: string,
+  version: string?,
   parent: POM?,
   modules: {string},
-
-  with_group_id: (self: POM, group_id: string) -> POM,
-  with_artifact_id: (self: POM, artifact_id: string) -> POM,
-  with_version: (self: POM, version: string) -> POM,
-  with_parent: (self: POM, parent: POM) -> POM,
-  with_module: (self: POM, module: string) -> POM,
-
-  unwrap_pom: (self: POM) -> UnwrappedPOM,
 }
+
+export type POMImpl = POM & POMProps & Wrapper.Unwrappable<Unwrapped>
 
 export type Unwrapped = {
   project: Project.UnwrappedProject,
@@ -30,72 +29,88 @@ export type UnwrappedPOM = {
   parent: Unwrapped?,
   group_id: string,
   artifact_id: string,
-  version: string,
+  version: string?,
+  modules: {string}?,
 }
 
-local POM = {
-  __type = 'POM',
-  project = nil,
-  group_id = nil,
-  artifact_id = nil,
-  version = '1.0-SNAPSHOT',
-  parent = nil,
-  modules = nil,
-}
-
-function POM:new(o): POM
-  return Meta:type(o, self)
+function POM:new(o: POMProps): POM
+  return Meta:type(o, self, "POM")
 end
 
-function POM:from(project: Project.Project, group_id: string, artifact_id: string, modules: {string}?): POM
+function POM:from_root(project: Project.Project, group_id: string, artifact_id: string, version: string?): POM
   return POM:new({
     project = project,
     group_id = group_id,
+    version = version,
     artifact_id = artifact_id,
     parent = nil,
-    modules = modules or Meta:array {},
+    modules = Meta:array {},
   })
 end
 
-function POM.with_group_id(self: POM, group_id: string): POM
-  self.group_id = group_id
+function POM:from_parent(parent: POM, group_id: string, artifact_id: string, version: string?): POM
+  return POM:new({
+    project = (parent::POMImpl).project,
+    group_id = group_id,
+    version = version,
+    artifact_id = artifact_id,
+    parent = nil,
+    modules = Meta:array {},
+  })
+end
+
+function POM:with_group_id(group_id: string): POM
+  local this = self::POMImpl
+  this.group_id = group_id
+  return this
+end
+
+function POM:with_artifact_id(artifact_id: string): POM
+  local this = self::POMImpl
+  this.artifact_id = artifact_id
+  return this
+end
+
+function POM:with_version(version: string): POM
+  local this = self::POMImpl
+  this.version = version
   return self
 end
 
-function POM.with_artifact_id(self: POM, artifact_id: string): POM
-  self.artifact_id = artifact_id
-  return self
+function POM:with_parent(parent: POM): POM
+  local this = self::POMImpl
+  this.parent = parent
+  return this
 end
 
-function POM.with_version(self: POM, version: string): POM
-  self.version = version
-  return self
+function POM:with_module(module: string): POM
+  local this = self::POMImpl
+  this.modules[#this.modules + 1] = module
+  return this
 end
 
-function POM.with_parent(self: POM, parent: POM): POM
-  self.parent = parent
-  return self
+function POM:unwrap_project(): Project.UnwrappedProject
+  local this = self::POMImpl
+  return this.project:unwrap_project()
 end
 
-function POM.with_module(self: POM, module: string): POM
-  self.modules[#self.modules + 1] = module
-  return self
-end
 
-function POM.unwrap_pom(self: POM): UnwrappedPOM
+function POM:unwrap_pom(): UnwrappedPOM
+  local this = self::POMImpl
   return {
-    parent = self.parent and self.parent:unwrap(),
-    group_id = self.group_id,
-    artifact_id = self.artifact_id,
-    version = self.version,
+    parent = this.parent and this.parent:unwrap(),
+    group_id = this.group_id,
+    artifact_id = this.artifact_id,
+    version = this.version,
+    modules = this.modules,
   }
 end
 
-function POM.unwrap(self: POM): Unwrapped
+function POM:unwrap(): Unwrapped
+  local this = self::POMImpl
   return {
-    project = self.project:unwrap_project(),
-    pom = self:unwrap_pom(),
-    modules = self.modules,
+    project = this.project:unwrap_project(),
+    pom = this:unwrap_pom(),
   }
 end
 

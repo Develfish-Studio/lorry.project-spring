@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 import {{package.name}}.entity.{{unit.pascal_name}}Entity;
 import {{package.name}}.model.{{unit.pascal_name}}Model;
 
-import org.ntr1x.common.api.component.AppConverter;
+import studio.develfish.guppy.common.api.component.AppConverter;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Component;

@@ -1,4 +1,4 @@
-{
+return {
   artifact_id = "assembly_all",
   parent = {
     group_id = "org.example",

@@ -3,8 +3,8 @@ actions:
   test:
     path: actions/test.luau
 scrolls:
-  project:
-    path: scrolls/project
+  root:
+    path: scrolls/root
   module_web:
     path: scrolls/module_web
   module_lib:

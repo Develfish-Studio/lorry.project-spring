@@ -1,4 +1,4 @@
-{
+return {
   artifact_id = "service_uploads",
   parent = {
     group_id = "org.example",

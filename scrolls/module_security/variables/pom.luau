@@ -1,4 +1,4 @@
-{
+return {
   artifact_id = "service_security",
   parent = {
     group_id = "org.example",

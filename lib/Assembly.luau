@@ -1,14 +1,16 @@
-local Meta = require('@develfish-repo.core/Meta')
-local Wrapper = require('@develfish-repo.core/Wrapper')
-local Module = require('@develfish-repo.spring/Module')
+--!strict
 
-export type Assembly = Wrapper.Unwrappable<Unwrapped> & {
-  __type: 'Assembly',
+local Meta = require('@develfish-repo.utils/lib/Meta')
+local Wrapper = require('@develfish-repo.project/lib/Wrapper')
+local Module = require('./Module/Module')
+
+local Assembly = {}
+
+export type Assembly = typeof(Assembly)
+
+export type AssemblyProps = {
   module: Module.Module,
   nested_modules: {Module.Module},
-
-  with_nested_module: (self: Assembly, nested_module: Module.Module) -> Assembly,
-  with_nested_modules: (self: Assembly, nested_modules: {Module.Module}) -> Assembly,
 }
 
 export type Unwrapped = {
@@ -18,13 +20,15 @@ export type Unwrapped = {
   nested_modules: {Module.Unwrapped},
 }
 
-local Assembly = {
-  module = nil,
-  nested_modules = nil,
-}
+export type AssemblyImpl = Assembly & AssemblyProps & Wrapper.Unwrappable<Unwrapped>
 
-function Assembly:new(o): Assembly
-  return Meta:type(o, self)
+export type ConfigurerFunc = (this: AssemblyImpl) -> ()
+
+export type AnyChild =
+  | Module.Module
+
+function Assembly:new(o: AssemblyProps): Assembly
+  return Meta:type(o, self, "Assembly")
 end
 
 function Assembly:from(parent: Module.Module, nested_modules: {Module.Module}?): Assembly
@@ -34,24 +38,54 @@ function Assembly:from(parent: Module.Module, nested_modules: {Module.Module}?):
   })
 end
 
-function Assembly.with_nested_module(self: Assembly, nested_module: Module.Module): Assembly
-  self.nested_modules[#self.nested_modules + 1] = nested_module
-  return self
+function Assembly:configure(configurer: {ConfigurerFunc}): Assembly
+  local this = self::AssemblyImpl
+  for _, func in configurer do
+    func(this)
+  end
+  return this
 end
 
-function Assembly.with_nested_modules(self: Assembly, nested_modules: {Module.Module}): Assembly
-  for _, m in nested_modules do
-    self.nested_modules[#self.nested_modules + 1] = m
+function Assembly:setup(children: {AnyChild}): Assembly
+  local this = self::AssemblyImpl
+  for _, child in children do
+    this:with_child(child)
   end
   return self
 end
 
-function Assembly.unwrap(self: Assembly): Unwrapped
+function Assembly:with_child(child: AnyChild): Assembly
+  local this = self::AssemblyImpl
+  local tag = Meta:typeof(child)
+  if tag == 'Module' then
+    this.nested_modules[#self.nested_modules + 1] = child::Module.Module
+  end
+  return this
+end
+
+
+function Assembly:with_nested_module(nested_module: Module.Module): Assembly
+  local this = self::AssemblyImpl
+  this:with_child(nested_module)
+  return this
+end
+
+function Assembly:with_nested_modules(nested_modules: {Module.Module}): Assembly
+  local this = self::AssemblyImpl
+  for _, m in nested_modules do
+    this:with_child(m)
+  end
+  return this
+end
+
+function Assembly:unwrap(): Unwrapped
+  local this = self::AssemblyImpl
   return {
-    pom = self.module:unwrap_pom(),
-    package = self.module:unwrap_package(),
-    module = self.module:unwrap_module(),
-    nested_modules = Wrapper:unwrap_array(self.nested_modules)
+    project = this.module:unwrap_project(),
+    pom = this.module:unwrap_pom(),
+    package = this.module:unwrap_package(),
+    module = this.module:unwrap_module(),
+    nested_modules = Wrapper:unwrap_array(this.nested_modules)
   }
 end
 

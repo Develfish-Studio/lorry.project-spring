@@ -15,7 +15,7 @@ import {{package.name}}.service.{{projection.name}}.{{resource.pascal_name}}Serv
 import {{package.name}}.request.{{projection.name}}.{{resource.pascal_name}}Request;
 import {{package.name}}.response.{{projection.name}}.{{resource.pascal_name}}Response;
 
-import org.ntr1x.common.api.views.Views;
+import studio.develfish.guppy.common.api.views.Views;
 
 import org.springdoc.core.annotations.ParameterObject;
 

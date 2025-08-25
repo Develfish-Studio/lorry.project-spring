@@ -2,8 +2,8 @@ package {{package.name}}.converter;
 
 import {{package.name}}.model.PrincipalModel;
 import lombok.RequiredArgsConstructor;
-import org.ntr1x.common.api.component.AppConverter;
-import org.ntr1x.common.web.security.JwtAuthoritiesExtractor;
+import studio.develfish.guppy.common.api.component.AppConverter;
+import studio.develfish.guppy.common.web.security.JwtAuthoritiesExtractor;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;

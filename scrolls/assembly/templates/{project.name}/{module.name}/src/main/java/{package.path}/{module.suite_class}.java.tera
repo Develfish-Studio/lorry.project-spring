@@ -1,16 +1,16 @@
 package {{package.name}};
 
 import {{package.name}}.config.{{module.pascal_name}}Config;
-import org.ntr1x.common.api.config.CommonBeanConfig;
-import org.ntr1x.common.events.config.CloudEventsBeanConfig;
-import org.ntr1x.common.events.config.CloudEventsKafkaConfig;
-import org.ntr1x.common.security.config.OpenidConfig;
-import org.ntr1x.common.web.config.OpenApiConfig;
-import org.ntr1x.common.web.config.OpenApiSecurityConfig;
-import org.ntr1x.common.web.config.WebMvcConfig;
-import org.ntr1x.common.web.config.WebMvcSecurityConfig;
-import org.ntr1x.common.ws.config.WebSocketConfig;
-import org.ntr1x.common.ws.config.WebSocketHubConfig;
+import studio.develfish.guppy.common.api.config.CommonBeanConfig;
+import studio.develfish.guppy.common.events.config.CloudEventsBeanConfig;
+import studio.develfish.guppy.common.events.config.CloudEventsKafkaConfig;
+import studio.develfish.guppy.common.security.config.OpenidConfig;
+import studio.develfish.guppy.common.web.config.OpenApiConfig;
+import studio.develfish.guppy.common.web.config.OpenApiSecurityConfig;
+import studio.develfish.guppy.common.web.config.WebMvcConfig;
+import studio.develfish.guppy.common.web.config.WebMvcSecurityConfig;
+import studio.develfish.guppy.common.ws.config.WebSocketConfig;
+import studio.develfish.guppy.common.ws.config.WebSocketHubConfig;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;

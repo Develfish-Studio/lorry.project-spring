@@ -12,8 +12,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import org.ntr1x.common.jpa.criteria.OrderStatement;
-import org.ntr1x.common.jpa.criteria.WhereStatement;
+import studio.develfish.guppy.common.jpa.criteria.OrderStatement;
+import studio.develfish.guppy.common.jpa.criteria.WhereStatement;
 
 import org.springdoc.core.annotations.ParameterObject;
 

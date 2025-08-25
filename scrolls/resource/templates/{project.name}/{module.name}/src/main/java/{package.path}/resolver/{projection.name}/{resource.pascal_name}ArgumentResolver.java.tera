@@ -1,7 +1,7 @@
 package {{package.name}}.resolver.{{projection.name}};
 
 import {{package.name}}.request.{{projection.name}}.{{resource.pascal_name}}Request;
-import org.ntr1x.common.web.component.AppArgumentResolver;
+import studio.develfish.guppy.common.web.component.AppArgumentResolver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.core.MethodParameter;
