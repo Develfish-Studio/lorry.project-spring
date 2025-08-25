@@ -1,45 +1,33 @@
-local Meta = require('@develfish-repo.core/Meta')
-local Wrapper = require('@develfish-repo.core/Wrapper')
-local case = require('@develfish-repo.core/util/string/case')
+--!strict
 
-export type Formula = Wrapper.Unwrappable<Unwrapped> & {
-  __type: 'Formula',
+local Meta = require('@develfish-repo.utils/lib/Meta')
+local Case = require('@develfish-repo.utils/lib/Case')
+local Wrapper = require('@develfish-repo.project/lib/Wrapper')
+
+local Formula = {}
+
+export type Formula = typeof(Formula) & Wrapper.Unwrappable<Unwrapped>
+
+export type FormulaProps = {
   name: string,
   java_type: string,
   db_type: string,
   user_type: string?,
   is_lob: boolean?,
+  column_definition: string?,
   formula: string,
-
-  with_column_definition: (column_definition: string) -> Formula,
-  with_user_type: (user_type: string) -> Formula,
-  with_lob: (is_lob: boolean) -> Formula,
 }
 
-export type Unwrapped = {
-  name: string,
+export type Unwrapped = FormulaProps & {
   snake_name: string,
   camel_name: string,
   pascal_name: string,
-  java_type: string,
-  db_type: string,
-  user_type: string?,
-  is_lob: boolean?,
-  formula: string,
 }
 
-local Formula = {
-  __type = 'Formula',
-  name = nil,
-  java_type = nil,
-  db_type = nil,
-  user_type = nil,
-  is_lob = nil,
-  formula = nil,
-}
+export type FormulaImpl = Formula & FormulaProps
 
-function Formula:new(o): Formula
-  return Meta:type(o, self)
+function Formula:new(o: FormulaProps): Formula
+  return Meta:type(o, self, "Unit.Entity.Formula")
 end
 
 function Formula:uuid(name: string, formula: string): Formula
@@ -133,34 +121,35 @@ function Formula:jsonb(name: string, formula: string): Formula
 end
 
 function Formula:with_column_definition(column_definition: string): Formula
-  self.column_definition = column_definition
-  return self
+  local this = self::FormulaImpl
+  this.column_definition = column_definition
+  return this
 end
 
 function Formula:with_user_type(user_type: string): Formula
-  self.user_type = user_type
-  return self
+  local this = self::FormulaImpl
+  this.user_type = user_type
+  return this
 end
 
-function Formula:with_lob(is_lob: boolean): Formula
-  if is_lob == nil then
-    is_lob = true
-  end
-  self.is_lob = is_lob
-  return self
+function Formula:with_lob(is_lob: boolean?): Formula
+  local this = self::FormulaImpl
+  this.is_lob = is_lob == nil or is_lob == true
+  return this
 end
 
-function Formula.unwrap(self: Formula): Unwrapped
+function Formula:unwrap(): Unwrapped
+  local this = self::FormulaImpl
   return {
-    name = self.name,
-    snake_name = self.name,
-    camel_name = case.snakeToCamel(self.name),
-    pascal_name = case.snakeToPascal(self.name),
-    formula = self.formula,
-    java_type = self.java_type,
-    db_type = self.db_type,
-    user_type = self.user_type,
-    is_lob = self.is_lob,
+    name = this.name,
+    snake_name = this.name,
+    camel_name = Case:snake_to_camel(this.name),
+    pascal_name = Case:snake_to_pascal(this.name),
+    formula = this.formula,
+    java_type = this.java_type,
+    db_type = this.db_type,
+    user_type = this.user_type,
+    is_lob = this.is_lob,
   }
 end
 

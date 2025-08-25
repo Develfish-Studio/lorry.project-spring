@@ -1,20 +1,21 @@
-local Meta = require('@develfish-repo.core/Meta')
-local Wrapper = require('@develfish-repo.core/Wrapper')
-local case = require('@develfish-repo.core/util/string/case')
+--!strict
 
-export type Prop = Wrapper.Unwrappable<Unwrapped> & {
-  __type: 'Prop',
+local Meta = require('@develfish-repo.utils/lib/Meta')
+local Case = require('@develfish-repo.utils/lib/Case')
+local Wrapper = require('@develfish-repo.project/lib/Wrapper')
+
+local Prop = {}
+
+export type Prop = typeof(Prop) & Wrapper.Unwrappable<Unwrapped>
+
+export type PropProps = {
   name: string,
   updatable: string?,
   java_type: string,
   db_type: string,
-  column_definition: string,
+  column_definition: string?,
   user_type: string?,
   is_lob: boolean?,
-
-  with_column_definition: (self: Prop, column_definition: string) -> Prop,
-  with_user_type: (self: Prop, user_type: string) -> Prop,
-  with_lob: (self: Prop, is_lob: boolean) -> Prop,
 }
 
 export type Unwrapped = {
@@ -25,24 +26,15 @@ export type Unwrapped = {
   updatable: string?,
   java_type: string,
   db_type: string,
-  column_definition: string,
+  column_definition: string?,
   user_type: string?,
   is_lob: boolean?,
 }
 
-local Prop = {
-  __type = 'Prop',
-  name = nil,
-  updatable = nil,
-  java_type = nil,
-  db_type = nil,
-  column_definition = nil,
-  user_type = nil,
-  is_lob = nil,
-}
+export type PropImpl = Prop & PropProps
 
-function Prop:new(o): Prop
-  return Meta:type(o, self)
+function Prop:new(o: PropProps): Prop
+  return Meta:type(o, self, 'Unit.Entity.Prop')
 end
 
 function Prop:uuid(name: string): Prop
@@ -127,36 +119,37 @@ function Prop:jsonb(name: string): Prop
   })
 end
 
-function Prop.with_column_definition(self: Prop, column_definition: string): Prop
-  self.column_definition = column_definition
+function Prop:with_column_definition(column_definition: string): Prop
+  local this = self::PropImpl
+  this.column_definition = column_definition
+  return this
+end
+
+function Prop:with_user_type(user_type: string): Prop
+  local this = self::PropImpl
+  this.user_type = user_type
+  return this
+end
+
+function Prop:with_lob(is_lob: boolean?): Prop
+  local this = self::PropImpl
+  this.is_lob = is_lob == nil or is_lob == true
   return self
 end
 
-function Prop.with_user_type(self: Prop, user_type: string): Prop
-  self.user_type = user_type
-  return self
-end
-
-function Prop.with_lob(self: Prop, is_lob: boolean): Prop
-  if is_lob == nil then
-    is_lob = true
-  end
-  self.is_lob = is_lob
-  return self
-end
-
-function Prop.unwrap(self: Prop): Unwrapped
+function Prop:unwrap(): Unwrapped
+  local this = self::PropImpl
   return {
-    name = self.name,
-    snake_name = self.name,
-    camel_name = case.snakeToCamel(self.name),
-    pascal_name = case.snakeToPascal(self.name),
-    updatable = self.updatable,
-    java_type = self.java_type,
-    db_type = self.db_type,
-    column_definition = self.column_definition,
-    user_type = self.user_type,
-    is_lob = self.is_lob,
+    name = this.name,
+    snake_name = this.name,
+    camel_name = Case:snake_to_camel(this.name),
+    pascal_name = Case:snake_to_pascal(this.name),
+    updatable = this.updatable,
+    java_type = this.java_type,
+    db_type = this.db_type,
+    column_definition = this.column_definition,
+    user_type = this.user_type,
+    is_lob = this.is_lob,
   }
 end
 

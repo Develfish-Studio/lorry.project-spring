@@ -14,8 +14,8 @@ public class {{exchange.pascal_name}}Exchange {
     public NewTopic {{topic.camel_name}}Topic() {
         return TopicBuilder
                 .name("{{topic.snake_name}}")
-                .partitions({{topic.partitions}})
-                .replicas({{topic.replicas}})
+                .partitions({{topic.partitions | default(value = 1)}})
+                .replicas({{topic.replicas | default(value = 1)}})
                 {%- if topic.compact %}
                 .compact()
                 {%- endif %}

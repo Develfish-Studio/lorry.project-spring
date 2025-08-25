@@ -9,7 +9,7 @@ RUN mvn dependency:go-offline
 
 FROM loader AS builder
 ARG MODULE_NAME
-ARG MODULE_VERSION={{docker.version}}
+ARG MODULE_VERSION={{docker.version | default(value = '1.0.0-SNAPSHOT')}}
 {%- for module in docker.modules %}
 ADD {{module}}/src ./{{module}}/src
 {%- endfor %}
@@ -19,7 +19,7 @@ FROM eclipse-temurin:17-jdk-alpine
 WORKDIR /app
 VOLUME /tmp
 ARG MODULE_NAME
-ARG MODULE_VERSION={{docker.version}}
+ARG MODULE_VERSION={{docker.version | default(value = '1.0.0-SNAPSHOT')}}
 ENV JAR_FILE="/app/${MODULE_NAME}/target/${MODULE_NAME}-${MODULE_VERSION}-spring-boot.jar"
 COPY --from=builder ${JAR_FILE} /app/app.jar
 RUN ls -la .

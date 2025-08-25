@@ -63,7 +63,6 @@ function Assembly:with_child(child: AnyChild): Assembly
   return this
 end
 
-
 function Assembly:with_nested_module(nested_module: Module.Module): Assembly
   local this = self::AssemblyImpl
   this:with_child(nested_module)

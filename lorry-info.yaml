@@ -1,4 +1,7 @@
 name: develfish-repo.project-spring
+luau:
+  aliases:
+    root: .
 actions:
   test:
     path: actions/test.luau

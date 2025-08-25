@@ -14,6 +14,7 @@ local Module = {
 }
 
 export type Module = typeof(Module) & Wrapper.Unwrappable<Unwrapped> & {
+  name: string,
   kind: string
 }
 
