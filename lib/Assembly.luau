@@ -51,14 +51,14 @@ function Assembly:setup(children: {AnyChild}): Assembly
   for _, child in children do
     this:with_child(child)
   end
-  return self
+  return this
 end
 
 function Assembly:with_child(child: AnyChild): Assembly
   local this = self::AssemblyImpl
   local tag = Meta:typeof(child)
   if tag == 'Module' then
-    this.nested_modules[#self.nested_modules + 1] = child::Module.Module
+    this.nested_modules[#this.nested_modules + 1] = child::Module.Module
   end
   return this
 end

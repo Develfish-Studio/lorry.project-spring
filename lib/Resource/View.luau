@@ -1,8 +1,13 @@
-local Meta = require('@develfish-repo.core/Meta')
-local Wrapper = require('@develfish-repo.core/Wrapper')
+--!strict
 
-export type View = Wrapper.Unwrappable<Unwrapped> & {
-  __type: 'View',
+local Meta = require('@develfish-repo.utils/lib/Meta')
+local Wrapper = require('@develfish-repo.project/lib/Wrapper')
+
+local View = {}
+
+export type View = typeof(View) & Wrapper.Unwrappable<Unwrapped>
+
+export type ViewProps = {
   name: string,
   columns: {string},
 }
@@ -12,14 +17,10 @@ export type Unwrapped = {
   columns: {string},
 }
 
-local View = {
-  __type = 'View',
-  name = nil,
-  columns = Meta:array {},
-}
+export type ViewImpl = View & ViewProps
 
-function View:new(o): View
-  return Meta:type(o, self)
+function View:new(o: ViewProps): View
+  return Meta:type(o, self, "Resource.View")
 end
 
 function View:from(name: string, columns: {string}?): View
@@ -53,10 +54,11 @@ function View:select(columns: {string}?): View
   return View:from('Select', columns)
 end
 
-function View.unwrap(self: View): Unwrapped
+function View:unwrap(): Unwrapped
+  local this = self::ViewImpl
   return {
-    name = self.name,
-    columns = self.columns,
+    name = this.name,
+    columns = this.columns,
   }
 end
 

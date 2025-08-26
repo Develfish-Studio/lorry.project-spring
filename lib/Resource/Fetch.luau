@@ -1,19 +1,22 @@
-local Meta = require('@develfish-repo.core/Meta')
-local Wrapper = require('@develfish-repo.core/Wrapper')
-local Module = require('@develfish-repo.spring/Module')
-local Unit = require('@develfish-repo.spring/Unit')
-local case = require('@develfish-repo.core/util/string/case')
+--!strict
 
-export type Fetch = Wrapper.Unwrappable<Unwrapped> & {
-  __type: 'Fetch',
+local Meta = require('@develfish-repo.utils/lib/Meta')
+local Case = require('@develfish-repo.utils/lib/Case')
+local Wrapper = require('@develfish-repo.project/lib/Wrapper')
+local Module = require('../Module/Module')
+local Unit = require('../Unit/Unit')
+
+local Fetch = {}
+
+export type Fetch = typeof(Fetch) & Wrapper.Unwrappable<Unwrapped>
+
+export type FetchProps = {
   unit: Unit.Unit,
   name: string,
   value: string?,
   expression: string?,
   path: string?,
   is_optional: boolean?,
-
-  with_is_optional: (self: Fetch, is_optional: boolean?) -> Fetch,
 }
 
 export type Unwrapped = {
@@ -37,18 +40,10 @@ export type Data = {
   is_optional: boolean?,
 }
 
-local Fetch = {
-  __type = 'Fetch',
-  unit = nil,
-  name = nil,
-  value = nil,
-  path = nil,
-  expression = nil,
-  is_optional = nil,
-}
+export type FetchImpl = Fetch & FetchProps
 
-function Fetch:new(o): Fetch
-  return Meta:type(o, self)
+function Fetch:new(o: FetchProps): Fetch
+  return Meta:type(o, self, "Resource.Fetch")
 end
 
 function Fetch:from(unit: Unit.Unit, name: string, options: Data?): Fetch
@@ -81,28 +76,26 @@ function Fetch:by_path(unit: Unit.Unit, name: string, path: string): Fetch
   })
 end
 
-function Fetch.with_is_optional(self: Fetch, is_optional: boolean?): Fetch
-  if is_optional == nil then
-    is_optional = true
-  end
-
-  self.is_optional = is_optional
-  return self
+function Fetch:with_optional(is_optional: boolean?): Fetch
+  local this = self::FetchImpl
+  this.is_optional = is_optional == nil or is_optional == true
+  return this
 end
 
-function Fetch.unwrap(self: Fetch): Unwrapped
+function Fetch:unwrap(): Unwrapped
+  local this = self::FetchImpl
   return {
-    name = self.name,
-    snake_name = self.name,
-    camel_name = case.snakeToCamel(self.name),
-    pascal_name = case.snakeToPascal(self.name),
-    kebab_name = case.snakeToKebab(self.name),
-    package = self.unit.module:unwrap_package(),
-    unit = self.unit:unwrap_unit(),
-    value = self.value,
-    expression = self.expression,
-    path = Wrapper:unwrap_path(self.path),
-    is_optional = self.is_optional,
+    name = this.name,
+    snake_name = this.name,
+    camel_name = Case:snake_to_camel(this.name),
+    pascal_name = Case:snake_to_pascal(this.name),
+    kebab_name = Case:snake_to_kebab(this.name),
+    package = this.unit.module:unwrap_package(),
+    unit = this.unit:unwrap_unit(),
+    value = this.value,
+    expression = this.expression,
+    path = Wrapper:unwrap_path(this.path),
+    is_optional = this.is_optional,
   }
 end
 

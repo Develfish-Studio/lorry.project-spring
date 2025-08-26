@@ -1,16 +1,19 @@
-local Meta = require('@develfish-repo.core/Meta')
-local Wrapper = require('@develfish-repo.core/Wrapper')
-local case = require('@develfish-repo.core/util/string/case')
+--!strict
 
-export type Filter = Wrapper.Unwrappable<Unwrapped> & {
-  __type: 'Filter',
+local Meta = require('@develfish-repo.utils/lib/Meta')
+local Case = require('@develfish-repo.utils/lib/Case')
+local Wrapper = require('@develfish-repo.project/lib/Wrapper')
+
+local Filter = {}
+
+export type Filter = typeof(Filter) & Wrapper.Unwrappable<Unwrapped>
+
+export type FilterProps = {
   name: string,
   value: string?,
   expression: string?,
   path: string?,
   is_optional: boolean?,
-
-  with_is_optional: (self: Filter, is_optional: boolean?) -> Filter,
 }
 
 export type Unwrapped = {
@@ -32,17 +35,10 @@ export type Data = {
   is_optional: boolean?,
 }
 
-local Filter = {
-  __type = 'Filter',
-  name = nil,
-  value = nil,
-  expression = nil,
-  path = nil,
-  is_optional = nil,
-}
+export type FilterImpl = Filter & FilterProps
 
-function Filter:new(o): Filter
-  return Meta:type(o, self)
+function Filter:new(o: FilterProps): Filter
+  return Meta:type(o, self, "Resource.Filter")
 end
 
 function Filter:from(name: string, options: Data?): Filter
@@ -74,26 +70,24 @@ function Filter:from_path(name: string, path: string): Filter
   })
 end
 
-function Filter.with_is_optional(self: Filter, is_optional: boolean?): Filter
-  if is_optional == nil then
-    is_optional = true
-  end
-
-  self.is_optional = is_optional
-  return self
+function Filter:with_optional(is_optional: boolean?): Filter
+  local this = self::FilterImpl
+  this.is_optional = is_optional == nil or is_optional == true
+  return this
 end
 
-function Filter.unwrap(self: Filter): Unwrapped
+function Filter:unwrap(): Unwrapped
+  local this = self::FilterImpl
   return {
-    name = self.name,
-    snake_name = self.name,
-    camel_name = case.snakeToCamel(self.name),
-    pascal_name = case.snakeToPascal(self.name),
-    kebab_name = case.snakeToKebab(self.name),
-    value = self.value,
-    expression = self.expression,
-    path = Wrapper:unwrap_path(self.path),
-    is_optional = self.is_optional,
+    name = this.name,
+    snake_name = this.name,
+    camel_name = Case:snake_to_camel(this.name),
+    pascal_name = Case:snake_to_pascal(this.name),
+    kebab_name = Case:snake_to_kebab(this.name),
+    value = this.value,
+    expression = this.expression,
+    path = Wrapper:unwrap_path(this.path),
+    is_optional = this.is_optional,
   }
 end
 

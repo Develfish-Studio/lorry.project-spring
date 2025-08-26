@@ -1,18 +1,18 @@
-local Meta = require('@develfish-repo.core/Meta')
-local Wrapper = require('@develfish-repo.core/Wrapper')
+--!strict
 
-export type Override = Wrapper.Unwrappable<Unwrapped> & {
-  __type: 'Override',
+local Meta = require('@develfish-repo.utils/lib/Meta')
+local Wrapper = require('@develfish-repo.project/lib/Wrapper')
+
+local Override = {}
+
+export type Override = typeof(Override) & Wrapper.Unwrappable<Unwrapped>
+
+export type OverrideProps = {
   name: string,
   expression: string?,
   context_value: string?,
   value: string?,
   is_hidden: boolean,
-
-  with_expression: (self: Override, expression: string) -> Override,
-  with_context_value: (self: Override, context_value: string) -> Override,
-  with_value: (self: Override, value: string) -> Override,
-  with_hidden: (self: Override) -> Override,
 }
 
 export type Unwrapped = {
@@ -38,17 +38,10 @@ export type UnwrappedContextValue = {
   kebab_name: string,
 }
 
-local Override = {
-  __type = 'Override',
-  name = nil,
-  expression = nil,
-  context_value = nil,
-  value = nil,
-  is_hidden = false,
-}
+export type OverrideImpl = Override & OverrideProps
 
-function Override:new(o): Override
-  return Meta:type(o, self)
+function Override:new(o: OverrideProps): Override
+  return Meta:type(o, self, "Resource.Override")
 end
 
 function Override:from(name: string, options: Data): Override
@@ -89,33 +82,38 @@ function Override:from_hidden(name: string): Override
   })
 end
 
-function Override.with_expression(self: Override, expression: string): Override
-  self.expression = expression
-  return self
+function Override:with_expression(expression: string): Override
+  local this = self::OverrideImpl
+  this.expression = expression
+  return this
 end
 
-function Override.with_context_value(self: Override, context_value: string): Override
-  self.context_value = context_value
-  return self
+function Override:with_context_value(context_value: string): Override
+  local this = self::OverrideImpl
+  this.context_value = context_value
+  return this
 end
 
-function Override.with_value(self: Override, value: string): Override
-  self.value = value
-  return self
+function Override:with_value(value: string): Override
+  local this = self::OverrideImpl
+  this.value = value
+  return this
 end
 
-function Override.with_hidden(self: Override): Override
-  self.is_hidden = true
-  return self
+function Override:with_hidden(is_hidden: boolean?): Override
+  local this = self::OverrideImpl
+  this.is_hidden = is_hidden == nil or is_hidden == true
+  return this
 end
 
-function Override.unwrap(self: Override): Unwrapped
+function Override:unwrap(): Unwrapped
+  local this = self::OverrideImpl
   return {
-    name = self.name,
-    value = self.value,
-    context_value = Wrapper:unwrap_name_or_nil(self.context_value),
-    expression = self.expression,
-    is_hidden = self.is_hidden,
+    name = this.name,
+    value = this.value,
+    context_value = Wrapper:unwrap_name_or_nil(this.context_value),
+    expression = this.expression,
+    is_hidden = this.is_hidden,
   }
 end
 
