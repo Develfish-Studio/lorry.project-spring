@@ -41,8 +41,8 @@ public class {{resource.pascal_name}}Controller {
     {%- else -%}
     @PostMapping
     {%- endif -%}
-    {%- if projection.actions.by_method.create.role != '' %}
-    @PreAuthorize("{{projection.actions.by_method.create.role}}")
+    {%- if projection.actions.by_method.create.role is defined %}
+    @PreAuthorize("{{projection.actions.by_method.create.role.expression}}")
     @SecurityRequirement(name = "Bearer")
     {%- endif %}
     @JsonView(Views.Create.class)
@@ -61,8 +61,8 @@ public class {{resource.pascal_name}}Controller {
     {%- else -%}
     @PostMapping("/remove")
     {%- endif -%}
-    {%- if projection.actions.by_method.remove.role != '' %}
-    @PreAuthorize("{{projection.actions.by_method.remove.role}}")
+    {%- if projection.actions.by_method.remove.role is defined %}
+    @PreAuthorize("{{projection.actions.by_method.remove.role.expression}}")
     @SecurityRequirement(name = "Bearer")
     {%- endif %}
     @JsonView(Views.Remove.class)
@@ -81,8 +81,8 @@ public class {{resource.pascal_name}}Controller {
     {%- else -%}
     @PostMapping("/removeAll")
     {%- endif -%}
-    {%- if projection.actions.by_method.remove.role != '' %}
-    @PreAuthorize("{{projection.actions.by_method.remove.role}}")
+    {%- if projection.actions.by_method.remove.role is defined %}
+    @PreAuthorize("{{projection.actions.by_method.remove.role.expression}}")
     @SecurityRequirement(name = "Bearer")
     {%- endif %}
     @JsonView(Views.Remove.class)
@@ -101,8 +101,8 @@ public class {{resource.pascal_name}}Controller {
     {%- else -%}
     @PutMapping("/update")
     {%- endif -%}
-    {%- if projection.actions.by_method.update.role != '' %}
-    @PreAuthorize("{{projection.actions.by_method.update.role}}")
+    {%- if projection.actions.by_method.update.role is defined %}
+    @PreAuthorize("{{projection.actions.by_method.update.role.expression}}")
     @SecurityRequirement(name = "Bearer")
     {%- endif %}
     @JsonView(Views.Update.class)
@@ -121,8 +121,8 @@ public class {{resource.pascal_name}}Controller {
     {%- else -%}
     @PutMapping("/upsert")
     {%- endif -%}
-    {%- if projection.actions.by_method.upsert.role != '' %}
-    @PreAuthorize("{{projection.actions.by_method.upsert.role}}")
+    {%- if projection.actions.by_method.upsert.role is defined %}
+    @PreAuthorize("{{projection.actions.by_method.upsert.role.expression}}")
     @SecurityRequirement(name = "Bearer")
     {%- endif %}
     @JsonView(Views.Update.class)
@@ -141,8 +141,8 @@ public class {{resource.pascal_name}}Controller {
     {%- else -%}
     @DeleteMapping("/i/{% for desc in entity.keys.array %}{{'{' ~ desc.camel_name ~ '}'}}{% if not loop.last %}|{% endif %}{% endfor %}")
     {%- endif -%}
-    {%- if projection.actions.by_method.delete.role != '' %}
-    @PreAuthorize("{{projection.actions.by_method.delete.role}}")
+    {%- if projection.actions.by_method.delete.role is defined %}
+    @PreAuthorize("{{projection.actions.by_method.delete.role.expression}}")
     @SecurityRequirement(name = "Bearer")
     {%- endif %}
     @JsonView(Views.Remove.class)
@@ -168,8 +168,8 @@ public class {{resource.pascal_name}}Controller {
     {%- else -%}
     @PutMapping("/i/{% for desc in entity.keys.array %}{{'{' ~ desc.camel_name ~ '}'}}{% if not loop.last %}|{% endif %}{% endfor %}")
     {%- endif -%}
-    {%- if projection.actions.by_method.replace.role != '' %}
-    @PreAuthorize("{{projection.actions.by_method.replace.role}}")
+    {%- if projection.actions.by_method.replace.role is defined %}
+    @PreAuthorize("{{projection.actions.by_method.replace.role.expression}}")
     @SecurityRequirement(name = "Bearer")
     {%- endif %}
     @JsonView(Views.Replace.class)
@@ -196,8 +196,8 @@ public class {{resource.pascal_name}}Controller {
     {%- else -%}
     @PostMapping("/select")
     {%- endif -%}
-    {%- if projection.actions.by_method.select.role != '' %}
-    @PreAuthorize("{{projection.actions.by_method.select.role}}")
+    {%- if projection.actions.by_method.select.role is defined %}
+    @PreAuthorize("{{projection.actions.by_method.select.role.expression}}")
     @SecurityRequirement(name = "Bearer")
     {%- endif %}
     @JsonView(Views.Select.class)
@@ -217,8 +217,8 @@ public class {{resource.pascal_name}}Controller {
     {%- else -%}
     @GetMapping("/i/{% for desc in entity.keys.array %}{{'{' ~ desc.camel_name ~ '}'}}{% if not loop.last %}|{% endif %}{% endfor %}")
     {%- endif -%}
-    {%- if projection.actions.by_method.get.role != '' %}
-    @PreAuthorize("{{projection.actions.by_method.get.role}}")
+    {%- if projection.actions.by_method.get.role is defined %}
+    @PreAuthorize("{{projection.actions.by_method.get.role.expression}}")
     @SecurityRequirement(name = "Bearer")
     {%- endif %}
     @JsonView(Views.Select.class)
@@ -244,8 +244,8 @@ public class {{resource.pascal_name}}Controller {
     {%- else -%}
     @GetMapping("/find")
     {%- endif -%}
-    {%- if projection.actions.by_method.find.role != '' %}
-    @PreAuthorize("{{projection.actions.by_method.find.role}}")
+    {%- if projection.actions.by_method.find.role is defined %}
+    @PreAuthorize("{{projection.actions.by_method.find.role.expression}}")
     @SecurityRequirement(name = "Bearer")
     {%- endif %}
     @JsonView(Views.Select.class)

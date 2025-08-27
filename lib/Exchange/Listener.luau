@@ -1,11 +1,16 @@
-local Meta = require('@develfish-repo.core/Meta')
-local Wrapper = require('@develfish-repo.core/Wrapper')
-local Project = require('@develfish-repo.core/Project')
-local Module = require('@develfish-repo.spring/Module')
-local case = require('@develfish-repo.core/util/string/case')
+--!strict
 
-export type Listener = Wrapper.Unwrappable<Unwrapped> & {
-  __type: 'Listener',
+local Meta = require('@develfish-repo.utils/lib/Meta')
+local Case = require('@develfish-repo.utils/lib/Case')
+local Wrapper = require('@develfish-repo.project/lib/Wrapper')
+local Project = require('@develfish-repo.project/lib/Project')
+local Module = require('../Module/Module')
+
+local Listener = {}
+
+export type Listener = typeof(Listener)
+
+export type ListenerProps = {
   module: Module.Module,
   name: string,
   id: string?,
@@ -14,25 +19,7 @@ export type Listener = Wrapper.Unwrappable<Unwrapped> & {
   group_id: string?,
   client_id_prefix: string?,
   concurrency: string?,
-  batch: boolean,
-
-  with_id: (self: Listener, id: string) -> Listener,
-  with_container_factory: (self: Listener, container_factory: string) -> Listener,
-  with_topic_pattern: (self: Listener, topic_pattern: string) -> Listener,
-  with_group_id: (self: Listener, group_id: string) -> Listener,
-  with_client_id_prefix: (self: Listener, client_id_prefix: string) -> Listener,
-  with_concurrency: (self: Listener, concurrency: string) -> Listener,
-  with_batch_flag: (self: Listener, batch: boolean) -> Listener,
-
-  unwrap_listener: (self: Listener) -> UnwrappedListener,
-  unwrap_module: (self: Listener) -> UnwrappedModule,
-}
-
-export type Unwrapped = {
-  project: Project.UnwrappedProject,
-  module: UnwrappedModule,
-  listener: UnwrappedListener,
-  package: Module.UnwrappedPackage,
+  batch: boolean?,
 }
 
 export type UnwrappedModule = {
@@ -53,24 +40,20 @@ export type UnwrappedListener = {
   group_id: string,
   client_id_prefix: string?,
   concurrency: string?,
-  batch: boolean,
+  batch: boolean?,
 }
 
-local Listener = {
-  __type = 'Listener',
-  module = nil,
-  name = nil,
-  id = nil,
-  container_factory = nil,
-  topic_pattern = nil,
-  group_id = nil,
-  client_id_prefix = nil,
-  concurrency = nil,
-  batch = false,
+export type Unwrapped = {
+  project: Project.UnwrappedProject,
+  module: UnwrappedModule,
+  listener: UnwrappedListener,
+  package: Module.UnwrappedPackage,
 }
 
-function Listener:new(o): Listener
-  return Meta:type(o, self)
+export type ListenerImpl = Listener & ListenerProps & Wrapper.Unwrappable<Unwrapped>
+
+function Listener:new(o: ListenerProps): Listener
+  return Meta:type(o, self, "Exchange.Listener")
 end
 
 function Listener:from(module: Module.Module, name: string, batch: boolean?): Listener
@@ -81,72 +64,82 @@ function Listener:from(module: Module.Module, name: string, batch: boolean?): Li
   })
 end
 
-function Listener.with_id(self: Listener, id: string): Listener
-  self.id = id
-  return self
+function Listener:with_id(id: string): Listener
+  local this = self::ListenerImpl
+  this.id = id
+  return this
 end
 
-function Listener.with_container_factory(self: Listener, container_factory: string): Listener
-  self.container_factory = container_factory
-  return self
+function Listener:with_container_factory(container_factory: string): Listener
+  local this = self::ListenerImpl
+  this.container_factory = container_factory
+  return this
 end
 
-function Listener.with_topic_pattern(self: Listener, topic_pattern: string): Listener
-  self.topic_pattern = topic_pattern
-  return self
+function Listener:with_topic_pattern(topic_pattern: string): Listener
+  local this = self::ListenerImpl
+  this.topic_pattern = topic_pattern
+  return this
 end
 
-function Listener.with_group_id(self: Listener, group_id: string): Listener
-  self.group_id = group_id
-  return self
+function Listener:with_group_id(group_id: string): Listener
+  local this = self::ListenerImpl
+  this.group_id = group_id
+  return this
 end
 
-function Listener.with_client_id_prefix(self: Listener, client_id_prefix: string): Listener
-  self.client_id_prefix = client_id_prefix
-  return self
+function Listener:with_client_id_prefix(client_id_prefix: string): Listener
+  local this = self::ListenerImpl
+  this.client_id_prefix = client_id_prefix
+  return this
 end
 
-function Listener.with_concurrency(self: Listener, concurrency: string): Listener
-  self.concurrency = concurrency
-  return self
+function Listener:with_concurrency(concurrency: string): Listener
+  local this = self::ListenerImpl
+  this.concurrency = concurrency
+  return this
 end
 
-function Listener.with_batch_flag(self: Listener, batch: boolean): Listener
-  self.batch = batch
-  return self
+function Listener:with_batch(batch: boolean?): Listener
+  local this = self::ListenerImpl
+  this.batch = batch == nil or batch == true
+  return this
 end
 
-function Listener.unwrap_listener(self: Listener): UnwrappedListener
+function Listener:unwrap_listener(): UnwrappedListener
+  local this = self::ListenerImpl
   return {
-    name = self.name,
-    snake_name = self.name,
-    camel_name = case.snakeToCamel(self.name),
-    pascal_name = case.snakeToPascal(self.name),
-    kebab_name = case.snakeToKebab(self.name),
-    id = self.id,
-    container_factory = self.container_factory,
-    topic_pattern = self.topic_pattern or self.name,
-    group_id = self.group_id or self.module.name .. '.' .. self.name,
-    client_id_prefix = self.client_id_prefix,
-    concurrency = self.concurrency,
-    batch = self.batch,
+    name = this.name,
+    snake_name = this.name,
+    camel_name = Case:snake_to_camel(this.name),
+    pascal_name = Case:snake_to_pascal(this.name),
+    kebab_name = Case:snake_to_kebab(this.name),
+    id = this.id,
+    container_factory = this.container_factory,
+    topic_pattern = this.topic_pattern or this.name,
+    group_id = this.group_id or this.module.name .. '.' .. this.name,
+    client_id_prefix = this.client_id_prefix,
+    concurrency = this.concurrency,
+    batch = this.batch,
   }
 end
 
-function Listener.unwrap_module(self: Listener): UnwrappedModule
+function Listener:unwrap_module(): UnwrappedModule
+  local this = self::ListenerImpl
   return {
-    name = self.module.name,
-    camel_name = case.snakeToCamel(self.module.name),
-    pascal_name = case.snakeToPascal(self.module.name),
+    name = this.module.name,
+    camel_name = Case:snake_to_camel(this.module.name),
+    pascal_name = Case:snake_to_pascal(this.module.name),
   }
 end
 
-function Listener.unwrap(self: Listener): Unwrapped
+function Listener:unwrap(): Unwrapped
+  local this = self::ListenerImpl
   return {
-    project = self.module.parent.project:unwrap_project(),
-    module = self:unwrap_module(),
-    listener = self:unwrap_listener(),
-    package = self.module:unwrap_package(),
+    project = this.module:unwrap_project(),
+    module = this:unwrap_module(),
+    listener = this:unwrap_listener(),
+    package = this.module:unwrap_package(),
   }
 end
 

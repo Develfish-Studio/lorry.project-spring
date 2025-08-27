@@ -1,59 +1,79 @@
-local Meta = require('core/Meta')
-local Project = require('core/Project')
-local Entity = require('spring/jpa/Entity')
+--!strict
 
-local DDL = {
-  __type = 'DDL',
+local Meta = require('@develfish-repo.utils/lib/Meta')
+local Project = require('@develfish-repo.project/lib/Project')
+local Unit = require('./Unit/Unit')
+local Entity = require('./Unit/Entity/Entity')
 
-  project = nil,
-  entity = nil,
-  base_name = nil,
-  create_name = nil,
-  drop_name = nil,
+local DDL = {}
+
+export type DDL = typeof(DDL)
+
+export type DDLProps = {
+  project: Project.Project,
+  unit: Unit.Unit,
+  base_name: string?,
+  create_name: string?,
+  drop_name: string?,
 }
 
-function DDL:new(o)
-  o = o or {}
-  setmetatable(o, self)
-  self.__index = self
-  return o
+export type Unwrapped = {
+  project: Project.UnwrappedProject,
+  entity: Entity.Unwrapped,
+  directory: {
+    base_name: string?,
+    create_name: string?,
+    drop_name: string?,
+  }
+}
+
+export type DDLImpl = DDL & DDLProps
+
+function DDL:new(o: DDLProps): DDL
+  return Meta:type(o, self, "DDL")
 end
 
-function DDL:from(project: Project, entity: Entity)
+function DDL:from(project: Project.Project, unit: Unit.Unit): DDL
   return DDL:new({
     project = project,
-    entity = entity,
+    unit = unit,
   })
 end
 
 function DDL:with_base_name(base_name: string)
-  self.base_name = base_name
-  return self
+  local this = self::DDLImpl
+  this.base_name = base_name
+  return this
 end
 
 function DDL:with_create_name(create_name: string)
-  self.create_name = create_name
-  return self
+  local this = self::DDLImpl
+  this.create_name = create_name
+  return this
 end
 
 function DDL:with_drop_name(drop_name: string)
-  self.drop_name = drop_name
-  return self
+  local this = self::DDLImpl
+  this.drop_name = drop_name
+  return this
 end
 
 function DDL:unwrap_directory()
+  local this = self::DDLImpl
   return {
-    base_name = self.base_name,
-    create_name = self.create_name,
-    drop_name = self.drop_name,
+    base_name = this.base_name,
+    create_name = this.create_name,
+    drop_name = this.drop_name,
   }
 end
 
 function DDL:unwrap()
+  local this = self::DDLImpl
+  local unit = this.unit::Unit.UnitImpl
   return {
-    project = self.project:unwrap_project(),
-    entity = self.entity:unwrap(),
-    directory = self:unwrap_directory()
+    project = this.project:unwrap_project(),
+    entity = unit.entity:unwrap(),
+    directory = this:unwrap_directory()
   }
 end
 

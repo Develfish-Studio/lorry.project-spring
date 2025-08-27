@@ -7,6 +7,7 @@ local Wrapper = require('@develfish-repo.project/lib/Wrapper')
 local Unit = require('../Unit/Unit')
 local Entity = require('../Unit/Entity/Entity')
 local Module = require('../Module/Module')
+local Target = require('./Target')
 local Projection = require('./Projection')
 local Signal = require('./Signal')
 local View = require('./View')
@@ -29,7 +30,7 @@ local Resource = {
   Link = Link,
 }
 
-export type Resource = typeof(Resource) & Wrapper.Unwrappable<Unwrapped>
+export type Resource = typeof(Resource) & Target.Target
 
 export type ResourceProps = {
   title: string?,
@@ -56,15 +57,7 @@ export type UnwrappedViews = {
   }
 }
 
-export type UnwrappedResource = {
-  name: string,
-  snake_name: string,
-  camel_name: string,
-  pascal_name: string,
-  kebab_name: string,
-  title: string,
-  description: string?,
-}
+export type UnwrappedResource = Target.UnwrappedResource
 
 export type UnwrappedSignals = {
   [string]: {Signal.Unwrapped}
@@ -84,7 +77,7 @@ export type Unwrapped = {
   links: {Link.Unwrapped},
 }
 
-export type ResourceImpl = Resource & ResourceProps & Request.RequestOwner
+export type ResourceImpl = Resource & ResourceProps & Request.RequestOwner & Wrapper.Unwrappable<Unwrapped>
 
 export type ConfigurerFunc = (this: ResourceImpl) -> ()
 
@@ -369,8 +362,12 @@ function Resource:unwrap_request_validations(request: Request.RequestImpl): {Val
 end
 
 function Resource:unwrap_links(): {Link.Unwrapped}
+  local this = self::ResourceImpl
   local links = Meta:array {}
-  -- todo
+  for _, link in this.links do
+    local unwrapped = link:unwrap()
+    links[#links + 1] = unwrapped
+  end
   return links
 end
 
