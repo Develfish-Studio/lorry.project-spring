@@ -1,7 +1,7 @@
 --!strict
 
-local Meta = require('@develfish-repo.utils/lib/Meta')
-local Case = require('@develfish-repo.utils/lib/Case')
+local Meta = require('@lorry.utils/lib/Meta')
+local Case = require('@lorry.utils/lib/Case')
 local Unit = require('../Unit/Unit')
 local Module = require('../Module/Module')
 local Target = require('./Target')

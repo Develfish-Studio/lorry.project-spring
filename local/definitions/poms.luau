@@ -1,4 +1,4 @@
-local POM = require('@develfish-repo.spring/POM')
+local POM = require('@lorry.spring/POM')
 
 local projects = require('./projects')
 

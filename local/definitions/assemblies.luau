@@ -1,4 +1,4 @@
-local Assembly = require('@develfish-repo.spring/Assembly')
+local Assembly = require('@lorry.spring/Assembly')
 
 local modules = require('./modules')
 

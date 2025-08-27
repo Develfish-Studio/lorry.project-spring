@@ -1,4 +1,4 @@
-local Resource = require('@develfish-repo.spring/Resource')
+local Resource = require('@lorry.spring/Resource')
 
 local projections = require('./projections')
 local units = require('./units')

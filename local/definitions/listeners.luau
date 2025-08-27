@@ -1,4 +1,4 @@
-local Listener = require('@develfish-repo.spring/exchange/Listener')
+local Listener = require('@lorry.spring/exchange/Listener')
 
 local modules = require('./modules')
 

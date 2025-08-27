@@ -1,8 +1,8 @@
-local Unit = require('@develfish-repo.spring/Unit')
-local PK = require('@develfish-repo.spring/jpa/PK')
-local Prop = require('@develfish-repo.spring/jpa/Prop')
-local Ref = require('@develfish-repo.spring/jpa/Ref')
-local Formula = require('@develfish-repo.spring/jpa/Formula')
+local Unit = require('@lorry.spring/Unit')
+local PK = require('@lorry.spring/jpa/PK')
+local Prop = require('@lorry.spring/jpa/Prop')
+local Ref = require('@lorry.spring/jpa/Ref')
+local Formula = require('@lorry.spring/jpa/Formula')
 
 local modules = require('./modules')
 

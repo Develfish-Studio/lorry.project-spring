@@ -1,5 +1,5 @@
-local Exchange = require('@develfish-repo.spring/Exchange')
-local Topic = require('@develfish-repo.spring/exchange/Topic')
+local Exchange = require('@lorry.spring/Exchange')
+local Topic = require('@lorry.spring/exchange/Topic')
 
 local modules = require('./modules')
 

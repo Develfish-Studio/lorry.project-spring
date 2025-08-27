@@ -1,10 +1,10 @@
 --!strict
 
-local Meta = require('@develfish-repo.utils/lib/Meta')
-local Table = require('@develfish-repo.utils/lib/Table')
-local Array = require('@develfish-repo.utils/lib/Array')
-local Wrapper = require('@develfish-repo.project/lib/Wrapper')
-local PropTypes = require('@develfish-repo.project/lib/PropTypes')
+local Meta = require('@lorry.utils/lib/Meta')
+local Table = require('@lorry.utils/lib/Table')
+local Array = require('@lorry.utils/lib/Array')
+local Wrapper = require('@lorry.project/lib/Wrapper')
+local PropTypes = require('@lorry.project/lib/PropTypes')
 local Server = require('./Server')
 local SpringDatasource = require('./SpringDatasource')
 local SpringJpa = require('./SpringJpa')

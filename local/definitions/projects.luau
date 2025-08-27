@@ -1,4 +1,4 @@
-local Project = require('@develfish-repo.core/Project')
+local Project = require('@lorry.core/Project')
 
 local projects = {}
 

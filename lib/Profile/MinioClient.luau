@@ -1,9 +1,9 @@
 --!strict
 
-local Meta = require('@develfish-repo.utils/lib/Meta')
-local Wrapper = require('@develfish-repo.project/lib/Wrapper')
-local Array = require('@develfish-repo.utils/lib/Array')
-local PropTypes = require('@develfish-repo.project/lib/PropTypes')
+local Meta = require('@lorry.utils/lib/Meta')
+local Wrapper = require('@lorry.project/lib/Wrapper')
+local Array = require('@lorry.utils/lib/Array')
+local PropTypes = require('@lorry.project/lib/PropTypes')
 local Bucket = require('./Bucket')
 
 local MinioClient = {}

@@ -1,4 +1,4 @@
-local Docker = require('@develfish-repo.spring/docker/Docker')
+local Docker = require('@lorry.spring/docker/Docker')
 
 local poms = require('./poms')
 

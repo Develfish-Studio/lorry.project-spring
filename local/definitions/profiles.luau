@@ -1,4 +1,4 @@
-local Profile = require('@develfish-repo.spring/Profile')
+local Profile = require('@lorry.spring/Profile')
 
 local profiles = {}
 
