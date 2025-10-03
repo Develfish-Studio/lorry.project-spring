@@ -2,34 +2,6 @@ name: lorry.project-spring
 luau:
   aliases:
     root: .
-actions:
-  test:
-    path: actions/test.luau
-scrolls:
-  root:
-    path: scrolls/root
-  module_web:
-    path: scrolls/module_web
-  module_lib:
-    path: scrolls/module_lib
-  module_security:
-    path: scrolls/module_security
-  module_uploads:
-    path: scrolls/module_uploads
-  assembly:
-    path: scrolls/assembly
-  docker:
-    path: scrolls/docker
-  unit:
-    path: scrolls/unit
-  ddl:
-    path: scrolls/ddl
-  resource:
-    path: scrolls/resource
-  exchange:
-    path: scrolls/exchange
-  listener:
-    path: scrolls/listener
 dependencies:
   lorry.utils:
     uri: git@github.com:Develfish-Studio/lorry.utils.git
