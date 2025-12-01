@@ -36,6 +36,7 @@ export type UnwrappedModule = {
   kind: string,
   pascal_name: string,
   camel_name: string,
+  snake_name: string,
   app_class: string,
   suite_class: string,
 }
@@ -150,7 +151,7 @@ end
 function Module:unwrap_package(): UnwrappedPackage
   local this = self::ModuleImpl
   local parent_pom = this.parent:unwrap_pom()
-  local package_name = parent_pom.group_id .. '.' .. Case:snake_to_prop(this.name)
+  local package_name = parent_pom.group_id .. '.' .. Case:any_to_prop(this.name)
   return {
     name = package_name,
     path = Case:prop_to_path(package_name)
@@ -182,14 +183,16 @@ end
 
 function Module:unwrap_module(): UnwrappedModule
   local this = self::ModuleImpl
-  local pascal_name = Case:snake_to_pascal(this.name)
-  local camel_name = Case:snake_to_camel(this.name)
+  local snake_name = Case:any_to_snake(this.name)
+  local pascal_name = Case:snake_to_pascal(snake_name)
+  local camel_name = Case:snake_to_camel(snake_name)
 
   return {
-    name = this.name,
+    name = Case:any_to_kebab(this.name),
     kind = this.kind,
     pascal_name = pascal_name,
     camel_name = camel_name,
+    snake_name = snake_name,
     app_class = pascal_name .. 'Application',
     suite_class = pascal_name .. 'Suite',
   }

@@ -1,5 +1,7 @@
 package {{package.name}}.response.{{projection.name}};
 
+import module java.base;
+
 import com.fasterxml.jackson.annotation.JsonView;
 
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -11,9 +13,7 @@ import lombok.NoArgsConstructor;
 
 import {{package.name}}.model.{{projection.name}}.{{resource.pascal_name}}Model;
 
-import studio.develfish.guppy.common.api.views.Views;
-
-import java.util.Collection;
+import studio.develfish.guppy.common.api.GuppyView;
 
 public interface {{resource.pascal_name}}Response {
     @Data
@@ -22,7 +22,7 @@ public interface {{resource.pascal_name}}Response {
     @AllArgsConstructor
     @Schema(name = "{{resource.pascal_name}}ResponseCreate")
     class Create {
-        @JsonView(Views.Default.class)
+        @JsonView(GuppyView.Default.class)
         private {{resource.pascal_name}}Model created;
     }
 
@@ -32,7 +32,7 @@ public interface {{resource.pascal_name}}Response {
     @AllArgsConstructor
     @Schema(name = "{{resource.pascal_name}}ResponseUpdate")
     class Update {
-        @JsonView(Views.Default.class)
+        @JsonView(GuppyView.Default.class)
         private {{resource.pascal_name}}Model updated;
     }
 
@@ -42,7 +42,7 @@ public interface {{resource.pascal_name}}Response {
     @AllArgsConstructor
     @Schema(name = "{{resource.pascal_name}}ResponseUpsert")
     class Upsert {
-        @JsonView(Views.Default.class)
+        @JsonView(GuppyView.Default.class)
         private {{resource.pascal_name}}Model updated;
     }
 
@@ -52,7 +52,7 @@ public interface {{resource.pascal_name}}Response {
     @AllArgsConstructor
     @Schema(name = "{{resource.pascal_name}}ResponseRemove")
     class Remove {
-        @JsonView(Views.Default.class)
+        @JsonView(GuppyView.Default.class)
         private {{resource.pascal_name}}Model removed;
     }
 
@@ -62,7 +62,7 @@ public interface {{resource.pascal_name}}Response {
     @AllArgsConstructor
     @Schema(name = "{{resource.pascal_name}}ResponseRemoveAll")
     class RemoveAll {
-        @JsonView(Views.Default.class)
+        @JsonView(GuppyView.Default.class)
         private Collection<{{resource.pascal_name}}Model> removed;
     }
 
@@ -72,10 +72,10 @@ public interface {{resource.pascal_name}}Response {
     @AllArgsConstructor
     @Schema(name = "{{resource.pascal_name}}ResponseReplace")
     class Replace {
-        @JsonView(Views.Default.class)
+        @JsonView(GuppyView.Default.class)
         private {{resource.pascal_name}}Model removed;
 
-        @JsonView(Views.Default.class)
+        @JsonView(GuppyView.Default.class)
         private {{resource.pascal_name}}Model created;
     }
 }

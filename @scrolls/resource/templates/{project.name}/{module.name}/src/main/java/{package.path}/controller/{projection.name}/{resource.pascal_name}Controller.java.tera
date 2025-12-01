@@ -1,5 +1,7 @@
 package {{package.name}}.controller.{{projection.name}};
 
+import module java.base;
+
 import com.fasterxml.jackson.annotation.JsonView;
 
 import io.swagger.v3.oas.annotations.Parameter;
@@ -15,7 +17,7 @@ import {{package.name}}.service.{{projection.name}}.{{resource.pascal_name}}Serv
 import {{package.name}}.request.{{projection.name}}.{{resource.pascal_name}}Request;
 import {{package.name}}.response.{{projection.name}}.{{resource.pascal_name}}Response;
 
-import studio.develfish.guppy.common.api.views.Views;
+import studio.develfish.guppy.common.api.GuppyView;
 
 import org.springdoc.core.annotations.ParameterObject;
 
@@ -23,8 +25,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.security.access.prepost.PreAuthorize;
-
-import java.util.Collection;
 
 @RestController
 @Tag(name = "{{resource.title}}"{% if resource.description is defined %}, description = "{{resource.description}}"{% endif %})
@@ -45,7 +45,7 @@ public class {{resource.pascal_name}}Controller {
     @PreAuthorize("{{projection.actions.by_method.create.role.expression}}")
     @SecurityRequirement(name = "Bearer")
     {%- endif %}
-    @JsonView(Views.Create.class)
+    @JsonView(GuppyView.Create.class)
     public {{resource.pascal_name}}Response.Create create(
             @Parameter(hidden = true) {{resource.pascal_name}}Request.Context context,
             @RequestBody @Valid {{resource.pascal_name}}Request.Create request
@@ -65,7 +65,7 @@ public class {{resource.pascal_name}}Controller {
     @PreAuthorize("{{projection.actions.by_method.remove.role.expression}}")
     @SecurityRequirement(name = "Bearer")
     {%- endif %}
-    @JsonView(Views.Remove.class)
+    @JsonView(GuppyView.Remove.class)
     public {{resource.pascal_name}}Response.Remove remove(
             @Parameter(hidden = true) {{resource.pascal_name}}Request.Context context,
             @RequestBody @Valid {{resource.pascal_name}}Request.Id key
@@ -85,7 +85,7 @@ public class {{resource.pascal_name}}Controller {
     @PreAuthorize("{{projection.actions.by_method.remove.role.expression}}")
     @SecurityRequirement(name = "Bearer")
     {%- endif %}
-    @JsonView(Views.Remove.class)
+    @JsonView(GuppyView.Remove.class)
     public {{resource.pascal_name}}Response.RemoveAll removeAll(
             @Parameter(hidden = true) {{resource.pascal_name}}Request.Context context,
             @RequestBody @Valid Collection<{{resource.pascal_name}}Request.Id> keys
@@ -105,7 +105,7 @@ public class {{resource.pascal_name}}Controller {
     @PreAuthorize("{{projection.actions.by_method.update.role.expression}}")
     @SecurityRequirement(name = "Bearer")
     {%- endif %}
-    @JsonView(Views.Update.class)
+    @JsonView(GuppyView.Update.class)
     public {{resource.pascal_name}}Response.Update update(
             @Parameter(hidden = true) {{resource.pascal_name}}Request.Context context,
             @RequestBody {{resource.pascal_name}}Request.Update request
@@ -125,7 +125,7 @@ public class {{resource.pascal_name}}Controller {
     @PreAuthorize("{{projection.actions.by_method.upsert.role.expression}}")
     @SecurityRequirement(name = "Bearer")
     {%- endif %}
-    @JsonView(Views.Update.class)
+    @JsonView(GuppyView.Update.class)
     public {{resource.pascal_name}}Response.Upsert upsert(
             @Parameter(hidden = true) {{resource.pascal_name}}Request.Context context,
             @RequestBody @Valid {{resource.pascal_name}}Request.Upsert request
@@ -145,7 +145,7 @@ public class {{resource.pascal_name}}Controller {
     @PreAuthorize("{{projection.actions.by_method.delete.role.expression}}")
     @SecurityRequirement(name = "Bearer")
     {%- endif %}
-    @JsonView(Views.Remove.class)
+    @JsonView(GuppyView.Remove.class)
     public {{resource.pascal_name}}Response.Remove remove(
             @Parameter(hidden = true) {{resource.pascal_name}}Request.Context context,
             {%- for desc in entity.keys.array %}
@@ -172,7 +172,7 @@ public class {{resource.pascal_name}}Controller {
     @PreAuthorize("{{projection.actions.by_method.replace.role.expression}}")
     @SecurityRequirement(name = "Bearer")
     {%- endif %}
-    @JsonView(Views.Replace.class)
+    @JsonView(GuppyView.Replace.class)
     public {{resource.pascal_name}}Response.Replace replace(
             @Parameter(hidden = true) {{resource.pascal_name}}Request.Context context,
             {%- for desc in entity.keys.array %}
@@ -200,7 +200,7 @@ public class {{resource.pascal_name}}Controller {
     @PreAuthorize("{{projection.actions.by_method.select.role.expression}}")
     @SecurityRequirement(name = "Bearer")
     {%- endif %}
-    @JsonView(Views.Select.class)
+    @JsonView(GuppyView.Select.class)
     public Page<{{resource.pascal_name}}Model> select(
             @Parameter(hidden = true) {{resource.pascal_name}}Request.Context context,
             @RequestBody @Valid {{resource.pascal_name}}Request.Select request,
@@ -221,7 +221,7 @@ public class {{resource.pascal_name}}Controller {
     @PreAuthorize("{{projection.actions.by_method.get.role.expression}}")
     @SecurityRequirement(name = "Bearer")
     {%- endif %}
-    @JsonView(Views.Select.class)
+    @JsonView(GuppyView.Select.class)
     public {{resource.pascal_name}}Model get(
             @Parameter(hidden = true) {{resource.pascal_name}}Request.Context context,
             {%- for desc in entity.keys.array %}
@@ -248,7 +248,7 @@ public class {{resource.pascal_name}}Controller {
     @PreAuthorize("{{projection.actions.by_method.find.role.expression}}")
     @SecurityRequirement(name = "Bearer")
     {%- endif %}
-    @JsonView(Views.Select.class)
+    @JsonView(GuppyView.Select.class)
     public {{resource.pascal_name}}Model find(
             @Parameter(hidden = true) {{resource.pascal_name}}Request.Context context,
             @ParameterObject @ModelAttribute @Valid {{resource.pascal_name}}Request.Find request

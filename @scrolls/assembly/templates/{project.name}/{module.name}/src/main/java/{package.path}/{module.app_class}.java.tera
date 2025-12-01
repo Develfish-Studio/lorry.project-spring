@@ -1,14 +1,17 @@
 package {{package.name}};
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Import;
 
 @SpringBootApplication
 @Import({{module.suite_class}}.class)
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class {{module.app_class}} {
 
-    public static void main(String[] args) {
+    static void main(String[] args) {
         Class<?>[] sources = new Class[]{
                 {{module.app_class}}.class,
                 {%- for nested_module in nested_modules %}

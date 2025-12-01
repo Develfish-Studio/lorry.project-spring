@@ -1,20 +1,20 @@
 package {{package.name}};
 
 import {{package.name}}.config.{{module.pascal_name}}Config;
-import studio.develfish.guppy.common.api.config.CommonBeanConfig;
+import studio.develfish.guppy.common.context.GuppyCommonBeanConfig;
 {%- if plugins is containing('common_events') %}
-import studio.develfish.guppy.common.events.config.CloudEventsBeanConfig;
-import studio.develfish.guppy.common.events.config.CloudEventsKafkaConfig;
+import studio.develfish.guppy.common.events.GuppyEventsBeanConfig;
+import studio.develfish.guppy.common.events.GuppyEventsKafkaConfig;
 {%- endif %}
 {%- if plugins is containing('common_web') %}
-import studio.develfish.guppy.common.web.config.OpenApiConfig;
-import studio.develfish.guppy.common.web.config.OpenApiSecurityConfig;
-import studio.develfish.guppy.common.web.config.WebMvcConfig;
-import studio.develfish.guppy.common.web.config.WebMvcSecurityConfig;
+import studio.develfish.guppy.web.mvc.context.GuppyOpenApiConfig;
+import studio.develfish.guppy.web.mvc.context.GuppyOpenApiSecurityConfig;
+import studio.develfish.guppy.web.mvc.context.GuppyWebMvcConfig;
+import studio.develfish.guppy.web.mvc.context.GuppyWebMvcSecurityConfig;
 {%- endif %}
 {%- if plugins is containing('common_ws') %}
-import studio.develfish.guppy.common.ws.config.WebSocketConfig;
-import studio.develfish.guppy.common.ws.config.WebSocketHubConfig;
+import studio.develfish.guppy.web.ws.context.GuppyWebSocketConfig;
+import studio.develfish.guppy.web.ws.context.GuppyWebSocketHubConfig;
 {%- endif %}
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -25,20 +25,20 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @Configuration
 @Import({
-        CommonBeanConfig.class,
+        GuppyCommonBeanConfig.class,
         {%- if plugins is containing('common_web') %}
-        WebMvcConfig.class,
-        WebMvcSecurityConfig.class,
-        OpenApiConfig.class,
-        OpenApiSecurityConfig.class,
+        GuppyWebMvcConfig.class,
+        GuppyWebMvcSecurityConfig.class,
+        GuppyOpenApiConfig.class,
+        GuppyOpenApiSecurityConfig.class,
         {%- endif %}
         {%- if plugins is containing('common_ws') %}
-        WebSocketConfig.class,
-        WebSocketHubConfig.class,
+        GuppyWebSocketConfig.class,
+        GuppyWebSocketHubConfig.class,
         {%- endif %}
         {%- if plugins is containing('common_events') %}
-        CloudEventsKafkaConfig.class,
-        CloudEventsBeanConfig.class,
+        GuppyEventsKafkaConfig.class,
+        GuppyEventsBeanConfig.class,
         {%- endif %}
         {%- for config in configs %}
         {{config}}.class,

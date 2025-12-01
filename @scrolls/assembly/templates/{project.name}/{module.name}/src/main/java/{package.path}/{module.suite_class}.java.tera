@@ -1,33 +1,33 @@
 package {{package.name}};
 
 import {{package.name}}.config.{{module.pascal_name}}Config;
-import studio.develfish.guppy.common.api.config.CommonBeanConfig;
-import studio.develfish.guppy.common.events.config.CloudEventsBeanConfig;
-import studio.develfish.guppy.common.events.config.CloudEventsKafkaConfig;
-import studio.develfish.guppy.common.security.config.OpenidConfig;
-import studio.develfish.guppy.common.web.config.OpenApiConfig;
-import studio.develfish.guppy.common.web.config.OpenApiSecurityConfig;
-import studio.develfish.guppy.common.web.config.WebMvcConfig;
-import studio.develfish.guppy.common.web.config.WebMvcSecurityConfig;
-import studio.develfish.guppy.common.ws.config.WebSocketConfig;
-import studio.develfish.guppy.common.ws.config.WebSocketHubConfig;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import studio.develfish.guppy.common.context.GuppyCommonBeanConfig;
+import studio.develfish.guppy.common.events.GuppyEventsBeanConfig;
+import studio.develfish.guppy.common.events.GuppyEventsKafkaConfig;
+import studio.develfish.guppy.security.context.GuppyOpenidBeanConfig;
+import studio.develfish.guppy.web.mvc.context.GuppyOpenApiConfig;
+import studio.develfish.guppy.web.mvc.context.GuppyOpenApiSecurityConfig;
+import studio.develfish.guppy.web.mvc.context.GuppyWebMvcConfig;
+import studio.develfish.guppy.web.mvc.context.GuppyWebMvcSecurityConfig;
+import studio.develfish.guppy.web.ws.context.GuppyWebSocketConfig;
+import studio.develfish.guppy.web.ws.context.GuppyWebSocketHubConfig;
 
 @Configuration
 @Import({
-        CommonBeanConfig.class,
-        WebMvcConfig.class,
-        WebMvcSecurityConfig.class,
-        OpenApiConfig.class,
-        OpenApiSecurityConfig.class,
-        WebSocketConfig.class,
-        WebSocketHubConfig.class,
-        CloudEventsKafkaConfig.class,
-        CloudEventsBeanConfig.class,
-        OpenidConfig.class,
+        GuppyCommonBeanConfig.class,
+        GuppyWebMvcConfig.class,
+        GuppyWebMvcSecurityConfig.class,
+        GuppyOpenApiConfig.class,
+        GuppyOpenApiSecurityConfig.class,
+        GuppyWebSocketConfig.class,
+        GuppyWebSocketHubConfig.class,
+        GuppyEventsKafkaConfig.class,
+        GuppyEventsBeanConfig.class,
+        GuppyOpenidBeanConfig.class,
 })
 @ComponentScan(basePackageClasses = {{module.pascal_name}}Config.class)
 @EnableJpaRepositories

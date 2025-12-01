@@ -12,8 +12,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import studio.develfish.guppy.common.jpa.criteria.OrderStatement;
-import studio.develfish.guppy.common.jpa.criteria.WhereStatement;
+import studio.develfish.guppy.query.api.GuppyOrderStatement;
+import studio.develfish.guppy.query.api.GuppyWhereStatement;
 
 import org.springdoc.core.annotations.ParameterObject;
 
@@ -154,12 +154,12 @@ public interface {{resource.pascal_name}}Request {
         @Valid
         @Hidden
         @JsonProperty("$where")
-        private Collection<@Valid WhereStatement> __where;
+        private Collection<@Valid GuppyWhereStatement> __where;
 
         @Valid
         @Hidden
         @JsonProperty("$order")
-        private Collection<@Valid OrderStatement> __order;
+        private Collection<@Valid GuppyOrderStatement> __order;
     }
     {%- endif %}
 

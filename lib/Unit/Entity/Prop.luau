@@ -119,6 +119,14 @@ function Prop:jsonb(name: string): Prop
   })
 end
 
+function Prop:point(name: string): Prop
+  return Prop:new({
+    name = name,
+    java_type = "org.springframework.data.geo.Point",
+    db_type = "point"
+  })
+end
+
 function Prop:with_column_definition(column_definition: string): Prop
   local this = self::PropImpl
   this.column_definition = column_definition

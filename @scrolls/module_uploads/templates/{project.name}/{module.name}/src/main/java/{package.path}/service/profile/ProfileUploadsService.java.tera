@@ -1,5 +1,6 @@
 package {{package.name}}.service.profile;
 
+import module java.base;
 import {{package.name}}.request.profile.ProfileUploadsRequest;
 import {{package.name}}.response.profile.ProfileUploadsResponse;
 import io.minio.MinioClient;
@@ -16,15 +17,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.util.unit.DataSize;
 import org.springframework.web.server.ResponseStatusException;
-
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
-import java.time.ZonedDateTime;
-import java.util.Map;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor

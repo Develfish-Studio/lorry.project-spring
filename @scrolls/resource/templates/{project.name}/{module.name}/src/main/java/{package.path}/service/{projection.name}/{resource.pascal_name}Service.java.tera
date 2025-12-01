@@ -1,14 +1,16 @@
 package {{package.name}}.service.{{projection.name}};
 
+import module java.base;
+
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 
 import lombok.RequiredArgsConstructor;
-import studio.develfish.guppy.common.api.annotation.Event;
-import studio.develfish.guppy.common.api.service.EvaluatorService;
-import studio.develfish.guppy.common.api.service.GeneratorService;
-import studio.develfish.guppy.common.jpa.criteria.SpecificationBuilder;
-import studio.develfish.guppy.common.web.util.Validate;
+import studio.develfish.guppy.events.api.GuppyEvent;
+import studio.develfish.guppy.common.context.service.EvaluatorService;
+import studio.develfish.guppy.common.context.service.GeneratorService;
+import studio.develfish.guppy.query.context.criteria.SpecificationBuilder;
+import studio.develfish.guppy.web.mvc.api.GuppyValidate;
 
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.convert.ConversionService;
@@ -23,10 +25,6 @@ import {{package.name}}.response.{{projection.name}}.{{resource.pascal_name}}Res
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -43,7 +41,7 @@ public class {{resource.pascal_name}}Service {
     {# Blank Line #}
     @Transactional
     {%- for signal in signals.create | default(value = []) %}
-    @Event(topic = "{{signal.topic}}", type = "{{signal.event_type}}", source = "service:{{module.name}}"{% if signal.payload_el is defined %}, payloadEl = "{{signal.payload_el}}"{% endif %}{% if signal.condition_el is defined %}, conditionEl = "{{signal.condition_el}}"{% endif %})
+    @GuppyEvent(topic = "{{signal.topic}}", type = "{{signal.event_type}}", source = "service:{{module.name}}"{% if signal.payload_el is defined %}, payloadEl = "{{signal.payload_el}}"{% endif %}{% if signal.condition_el is defined %}, conditionEl = "{{signal.condition_el}}"{% endif %})
     {%- endfor %}
     public {{resource.pascal_name}}Response.Create create(
         {{resource.pascal_name}}Request.Context context,
@@ -70,7 +68,7 @@ public class {{resource.pascal_name}}Service {
         {%- endif %}
         {%- if requests.create.validations | length %}
         {% for validation in requests.create.validations %}
-        Validate.create({{validation.status_code}}, "{{validation.message}}")
+        GuppyValidate.create({{validation.status_code}}, "{{validation.message}}")
                 .{{validation.predicate}}({%- for arg in validation.args -%}
                         {%- if arg is containing('expression') -%}
                         evaluatorService.evaluate({{expression}}, java.lang.Object.class)
@@ -133,7 +131,7 @@ public class {{resource.pascal_name}}Service {
     {# Blank Line #}
     @Transactional
     {%- for signal in signals.remove | default(value = []) %}
-    @Event(topic = "{{signal.topic}}", type = "{{signal.event_type}}", source = "service:{{module.name}}"{% if signal.payload_el is defined %}, payloadEl = "{{signal.payload_el}}"{% endif %}{% if signal.condition_el is defined %}, conditionEl = "{{signal.condition_el}}"{% endif %})
+    @GuppyEvent(topic = "{{signal.topic}}", type = "{{signal.event_type}}", source = "service:{{module.name}}"{% if signal.payload_el is defined %}, payloadEl = "{{signal.payload_el}}"{% endif %}{% if signal.condition_el is defined %}, conditionEl = "{{signal.condition_el}}"{% endif %})
     {%- endfor %}
     public {{resource.pascal_name}}Response.Remove remove(
         {{resource.pascal_name}}Request.Context context,
@@ -164,7 +162,7 @@ public class {{resource.pascal_name}}Service {
         {%- endif %}
         {%- if requests.remove.validations | length %}
         {% for validation in requests.remove.validations %}
-        Validate.create({{validation.status_code}}, "{{validation.message}}")
+        GuppyValidate.create({{validation.status_code}}, "{{validation.message}}")
                 .{{validation.predicate}}({%- for arg in validation.args -%}
                         {%- if arg is containing('expression') -%}
                         evaluatorService.evaluate({{expression}}, java.lang.Object.class)
@@ -193,7 +191,7 @@ public class {{resource.pascal_name}}Service {
     {# Blank Line #}
     @Transactional
     {%- for signal in signals.remove | default(value = []) %}
-    @Event(topic = "{{signal.topic}}", type = "{{signal.event_type}}", source = "service:{{module.name}}"{% if signal.payload_el is defined %}, payloadEl = "{{signal.payload_el}}"{% endif %}{% if signal.condition_el is defined %}, conditionEl = "{{signal.condition_el}}"{% endif %}, unwind = true)
+    @GuppyEvent(topic = "{{signal.topic}}", type = "{{signal.event_type}}", source = "service:{{module.name}}"{% if signal.payload_el is defined %}, payloadEl = "{{signal.payload_el}}"{% endif %}{% if signal.condition_el is defined %}, conditionEl = "{{signal.condition_el}}"{% endif %}, unwind = true)
     {%- endfor %}
     public {{resource.pascal_name}}Response.RemoveAll removeAll(
         {{resource.pascal_name}}Request.Context context,
@@ -226,7 +224,7 @@ public class {{resource.pascal_name}}Service {
         {# Blank line #}
         for ({{unit.pascal_name}}Entity entity : entities) {
                 {%- for validation in requests.remove.validations %}
-                Validate.create({{validation.status_code}}, "{{validation.message}}")
+                GuppyValidate.create({{validation.status_code}}, "{{validation.message}}")
                         .{{validation.predicate}}({%- for arg in validation.args -%}
                                 {%- if arg is containing('expression') -%}
                                 evaluatorService.evaluate({{expression}}, java.lang.Object.class)
@@ -259,7 +257,7 @@ public class {{resource.pascal_name}}Service {
     {# Blank Line #}
     @Transactional
     {%- for signal in signals.update | default(value = []) %}
-    @Event(topic = "{{signal.topic}}", type = "{{signal.event_type}}", source = "service:{{module.name}}"{% if signal.payload_el is defined %}, payloadEl = "{{signal.payload_el}}"{% endif %}{% if signal.condition_el is defined %}, conditionEl = "{{signal.condition_el}}"{% endif %})
+    @GuppyEvent(topic = "{{signal.topic}}", type = "{{signal.event_type}}", source = "service:{{module.name}}"{% if signal.payload_el is defined %}, payloadEl = "{{signal.payload_el}}"{% endif %}{% if signal.condition_el is defined %}, conditionEl = "{{signal.condition_el}}"{% endif %})
     {%- endfor %}
     public {{resource.pascal_name}}Response.Update update(
         {{resource.pascal_name}}Request.Context context,
@@ -286,7 +284,7 @@ public class {{resource.pascal_name}}Service {
         {%- endif %}
         {%- if requests.update.validations | length %}
         {% for validation in requests.update.validations %}
-        Validate.create({{validation.status_code}}, "{{validation.message}}")
+        GuppyValidate.create({{validation.status_code}}, "{{validation.message}}")
                 .{{validation.predicate}}({%- for arg in validation.args -%}
                         {%- if arg is containing('expression') -%}
                         evaluatorService.evaluate({{expression}}, java.lang.Object.class)
@@ -331,7 +329,7 @@ public class {{resource.pascal_name}}Service {
 
         {{unit.pascal_name}}Entity entity = {{unit.camel_name}}Repository
                 .findOne(specification)
-                .orElseThrow(() -> Validate.create(400, "Entity does not exist").buildError());
+                .orElseThrow(() -> GuppyValidate.create(400, "Entity does not exist").buildError());
 
         {{unit.pascal_name}}Entity.{{unit.pascal_name}}EntityBuilder builder = entity.toBuilder();
         {# Blank line -#}
@@ -367,7 +365,7 @@ public class {{resource.pascal_name}}Service {
     {# Blank Line #}
     @Transactional
     {%- for signal in signals.upsert | default(value = []) %}
-    @Event(topic = "{{signal.topic}}", type = "{{signal.event_type}}", source = "service:{{module.name}}"{% if signal.payload_el is defined %}, payloadEl = "{{signal.payload_el}}"{% endif %}{% if signal.condition_el is defined %}, conditionEl = "{{signal.condition_el}}"{% endif %})
+    @GuppyEvent(topic = "{{signal.topic}}", type = "{{signal.event_type}}", source = "service:{{module.name}}"{% if signal.payload_el is defined %}, payloadEl = "{{signal.payload_el}}"{% endif %}{% if signal.condition_el is defined %}, conditionEl = "{{signal.condition_el}}"{% endif %})
     {%- endfor %}
     public {{resource.pascal_name}}Response.Upsert upsert(
         {{resource.pascal_name}}Request.Context context,
@@ -394,7 +392,7 @@ public class {{resource.pascal_name}}Service {
         {%- endif %}
         {%- if requests.upsert.validations | length %}
         {% for validation in requests.upsert.validations %}
-        Validate.create({{validation.status_code}}, "{{validation.message}}")
+        GuppyValidate.create({{validation.status_code}}, "{{validation.message}}")
                 .{{validation.predicate}}({%- for arg in validation.args -%}
                         {%- if arg is containing('expression') -%}
                         evaluatorService.evaluate({{expression}}, java.lang.Object.class)
@@ -503,7 +501,7 @@ public class {{resource.pascal_name}}Service {
     {# Blank Line #}
     @Transactional
     {%- for signal in signals.replace | default(value = []) %}
-    @Event(topic = "{{signal.topic}}", type = "{{signal.event_type}}", source = "service:{{module.name}}"{% if signal.payload_el is defined %}, payloadEl = "{{signal.payload_el}}"{% endif %}{% if signal.condition_el is defined %}, conditionEl = "{{signal.condition_el}}"{% endif %})
+    @GuppyEvent(topic = "{{signal.topic}}", type = "{{signal.event_type}}", source = "service:{{module.name}}"{% if signal.payload_el is defined %}, payloadEl = "{{signal.payload_el}}"{% endif %}{% if signal.condition_el is defined %}, conditionEl = "{{signal.condition_el}}"{% endif %})
     {%- endfor %}
     public {{resource.pascal_name}}Response.Replace replace(
         {{resource.pascal_name}}Request.Context context,
@@ -535,7 +533,7 @@ public class {{resource.pascal_name}}Service {
         {%- endif %}
         {%- if requests.replace.validations | length %}
         {% for validation in requests.replace.validations %}
-        Validate.create({{validation.status_code}}, "{{validation.message}}")
+        GuppyValidate.create({{validation.status_code}}, "{{validation.message}}")
                 .{{validation.predicate}}({%- for arg in validation.args -%}
                         {%- if arg is containing('expression') -%}
                         evaluatorService.evaluate({{expression}}, java.lang.Object.class)
@@ -609,7 +607,7 @@ public class {{resource.pascal_name}}Service {
         {%- endif %}
         {%- if requests.select.validations | length %}
         {% for validation in requests.select.validations %}
-        Validate.create({{validation.status_code}}, "{{validation.message}}")
+        GuppyValidate.create({{validation.status_code}}, "{{validation.message}}")
                 .{{validation.predicate}}({%- for arg in validation.args -%}
                         {%- if arg is containing('expression') -%}
                         evaluatorService.evaluate({{expression}}, java.lang.Object.class)
@@ -716,7 +714,7 @@ public class {{resource.pascal_name}}Service {
         {%- endif %}
         {%- if requests.get.validations | length %}
         {% for validation in requests.get.validations %}
-        Validate.create({{validation.status_code}}, "{{validation.message}}")
+        GuppyValidate.create({{validation.status_code}}, "{{validation.message}}")
                 .{{validation.predicate}}({%- for arg in validation.args -%}
                         {%- if arg is containing('expression') -%}
                         evaluatorService.evaluate({{expression}}, java.lang.Object.class)

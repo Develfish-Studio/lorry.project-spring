@@ -109,7 +109,7 @@ end
 
 function Exchange.unwrap_exchange(self: Exchange): UnwrappedExchange
   local this = self::ExchangeImpl
-  local name = this.name or this.module.name
+  local name = this.name or Case:any_to_snake(this.module.name)
   return {
     name = name,
     snake_name = name,

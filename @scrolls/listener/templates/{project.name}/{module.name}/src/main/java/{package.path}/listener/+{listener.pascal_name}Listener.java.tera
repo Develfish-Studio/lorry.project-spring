@@ -1,5 +1,6 @@
 package {{package.name}}.listener;
 
+import module java.base;
 import io.cloudevents.CloudEvent;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
@@ -7,11 +8,6 @@ import studio.develfish.guppy.common.events.CloudEventsConstants;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.support.Acknowledgment;
 import org.springframework.stereotype.Component;
-
-{% if listener.batch -%}
-import java.util.List;
-{# Blank line #}
-{% endif -%}
 
 @Slf4j
 @Component("{{module.camel_name}}.{{listener.camel_name}}Listener")
