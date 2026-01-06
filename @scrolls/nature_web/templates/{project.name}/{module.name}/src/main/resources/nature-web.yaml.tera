@@ -1,0 +1,7 @@
+# Module specific settings
+
+server:
+  port: {{service.port}}
+  forward-headers-strategy: framework
+  servlet:
+    context-path: {{service.path}}

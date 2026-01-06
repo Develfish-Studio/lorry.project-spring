@@ -20,6 +20,7 @@ import org.springdoc.core.annotations.ParameterObject;
 import java.util.Collection;
 import java.util.Optional;
 
+@SuppressWarnings("java:S116")
 public interface {{resource.pascal_name}}Request {
     @Data
     @Builder(toBuilder = true)

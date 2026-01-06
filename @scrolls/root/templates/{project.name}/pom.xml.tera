@@ -38,6 +38,12 @@
                 <groupId>{{dependency.group_id}}</groupId>
                 <artifactId>{{dependency.artifact_id}}</artifactId>
                 <version>{{dependency.version}}</version>
+                {%- if dependency.scope is defined %}
+                <scope>{{dependency.scope}}</scope>
+                {%- endif %}
+                {%- if dependency.type is defined %}
+                <type>{{dependency.type}}</type>
+                {%- endif %}
             </dependency>
         {%- endfor %}
         </dependencies>

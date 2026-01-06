@@ -5,6 +5,7 @@ local Table = require('@lorry.utils/lib/Table')
 local Array = require('@lorry.utils/lib/Array')
 local Wrapper = require('@lorry.project/lib/Wrapper')
 local PropTypes = require('@lorry.project/lib/PropTypes')
+local Module = require('../Module/Module')
 local Server = require('./Server')
 local SpringDatasource = require('./SpringDatasource')
 local SpringJpa = require('./SpringJpa')
@@ -22,11 +23,11 @@ local Profile = {
 }
 
 export type Profile = typeof(Profile) & Wrapper.Unwrappable<Unwrapped> & Wrapper.Copy<Profile> & {
-  name: string,
+  name: string?,
 }
 
 export type ProfileProps = {
-  name: string,
+  name: string?,
   server: Server.Server?,
   spring_datasource: SpringDatasource.SpringDatasource?,
   spring_jpa: SpringJpa.SpringJpa?,
@@ -68,8 +69,8 @@ function Profile:new(o: ProfileProps): Profile
   return Meta:type(o, self, "Profile")
 end
 
-function Profile:from(name: string): Profile
-  assert(name ~= nil)
+function Profile:from(module: Module.Module, name: string?): Profile
+  assert(module ~= nil)
   return Profile:new({
     name = name,
     app_entries = Meta:array {},

@@ -1,1 +1,0 @@
-template:print(yaml:stringify(profiles['local']))

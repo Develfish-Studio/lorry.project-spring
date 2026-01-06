@@ -22,7 +22,7 @@ public class {{unit.pascal_name}}Entity {
     {%- for desc in entity.keys.array %}
     {# Blank line #}
     @Id
-    @Column(updatable = {{desc.updatable | default(value = false)}}{% if desc.column_definition %}, columnDefinition = "{{desc.column_definition}}"{% endif %})
+    @Column(name="{{desc.name}}", updatable = {{desc.updatable | default(value = false)}}{% if desc.column_definition %}, columnDefinition = "{{desc.column_definition}}"{% endif %})
     private {{desc.java_type}} {{desc.camel_name}};
     {%- endfor %}
 

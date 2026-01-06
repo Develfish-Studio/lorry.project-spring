@@ -37,6 +37,7 @@ export type ResourceProps = {
   description: string?,
   projection: Projection.Projection,
   unit: Unit.Unit,
+  module: Module.Module?,
   signals: {Signal.Signal},
   views: {View.View},
   requests: {Request.Request},
@@ -68,6 +69,8 @@ export type Unwrapped = {
   module: Module.UnwrappedModule,
   unit: Unit.UnwrappedUnit,
   package: Module.UnwrappedPackage,
+  unit_package: Module.UnwrappedPackage,
+  unit_module: Module.UnwrappedModule,
   entity: Entity.Unwrapped,
   projection: Projection.Unwrapped,
   resource: UnwrappedResource,
@@ -97,10 +100,11 @@ function Resource:new(o: ResourceProps): Resource
   return Meta:type(o, self, "Resource")
 end
 
-function Resource:from(projection: Projection.Projection, unit: Unit.Unit): Resource
+function Resource:from(projection: Projection.Projection, unit: Unit.Unit, module: Module.Module?): Resource
   return Resource:new({
     projection = projection,
     unit = unit,
+    module = module,
     views = Meta:array {},
     signals = Meta:array {},
     requests = Meta:array {},
@@ -371,14 +375,32 @@ function Resource:unwrap_links(): {Link.Unwrapped}
   return links
 end
 
+function Resource:unwrap_module(): Module.UnwrappedModule
+  local this = self::ResourceImpl
+  if this.module ~= nil then
+    return this.module:unwrap_module()
+  end
+  return this.unit.module:unwrap_module()
+end
+
+function Resource:unwrap_package(): Module.UnwrappedPackage
+  local this = self::ResourceImpl
+  if this.module ~= nil then
+    return this.module:unwrap_package()
+  end
+  return this.unit.module:unwrap_package()
+end
+
 function Resource:unwrap(): Unwrapped
   local this = self::ResourceImpl
   local unit = this.unit::Unit.UnitImpl
   return {
     project = unit.module:unwrap_project(),
-    module = unit.module:unwrap_module(),
+    module = this:unwrap_module(),
     unit = unit:unwrap_unit(),
-    package = unit.module:unwrap_package(),
+    unit_module = unit.module:unwrap_module(),
+    package = this:unwrap_package(),
+    unit_package = unit.module:unwrap_package(),
     entity = unit.entity:unwrap(),
     projection = this.projection:unwrap(),
     resource = this:unwrap_resource(),

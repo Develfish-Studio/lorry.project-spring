@@ -107,7 +107,8 @@ function Prop:json(name: string): Prop
   return Prop:new({
     name = name,
     java_type = "com.fasterxml.jackson.databind.JsonNode",
-    db_type = "json"
+    db_type = "json",
+    user_type = "io.hypersistence.utils.hibernate.type.json.JsonType"
   })
 end
 
@@ -115,7 +116,8 @@ function Prop:jsonb(name: string): Prop
   return Prop:new({
     name = name,
     java_type = "com.fasterxml.jackson.databind.JsonNode",
-    db_type = "jsonb"
+    db_type = "jsonb",
+    user_type = "io.hypersistence.utils.hibernate.type.json.JsonType"
   })
 end
 

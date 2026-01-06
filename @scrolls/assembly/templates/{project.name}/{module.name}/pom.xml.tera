@@ -11,12 +11,6 @@
 
     <artifactId>{{pom.artifact_id}}</artifactId>
 
-    <properties>
-        <maven.compiler.source>17</maven.compiler.source>
-        <maven.compiler.target>17</maven.compiler.target>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    </properties>
-
     <dependencies>
         {%- for nested_module in nested_modules %}
         <dependency>
@@ -47,7 +41,7 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
-                    <mainClass>{{package.name}}.{{module.app_class}}</mainClass>
+                    <mainClass>{{package.name}}.{{module.pascal_name}}Application</mainClass>
                 </configuration>
             </plugin>
         </plugins>

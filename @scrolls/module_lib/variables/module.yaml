@@ -1,3 +1,0 @@
-name: shared_api
-app_class: SharedApiApplication
-suite_class: SharedApiSuite

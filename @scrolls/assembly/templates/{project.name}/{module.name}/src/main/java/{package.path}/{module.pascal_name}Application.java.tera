@@ -1,0 +1,25 @@
+package {{package.name}};
+
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+
+@SpringBootApplication
+@EnableAutoConfiguration
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+public class {{module.pascal_name}}Application {
+
+    static void main(String[] args) {
+        Class<?>[] sources = new Class[]{
+                {{module.pascal_name}}Application.class,
+                {%- for nested_module in nested_modules %}
+                {{nested_module.package.name}}.{{nested_module.module.pascal_name}}Application.class,
+                {%- endfor %}
+        };
+
+        SpringApplication.run(sources, args);
+    }
+}

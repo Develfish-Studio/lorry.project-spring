@@ -17,8 +17,8 @@ import org.springframework.core.convert.ConversionService;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import {{package.name}}.entity.*;
-import {{package.name}}.repository.{{unit.pascal_name}}Repository;
+import {{unit_package.name}}.entity.*;
+import {{unit_package.name}}.repository.{{unit.pascal_name}}Repository;
 import {{package.name}}.model.{{projection.name}}.{{resource.pascal_name}}Model;
 import {{package.name}}.request.{{projection.name}}.{{resource.pascal_name}}Request;
 import {{package.name}}.response.{{projection.name}}.{{resource.pascal_name}}Response;
@@ -30,7 +30,7 @@ import org.springframework.data.domain.Pageable;
 @RequiredArgsConstructor
 public class {{resource.pascal_name}}Service {
 
-    @Qualifier("{{module.camel_name}}.{{unit.camel_name}}Repository")
+    @Qualifier("{{unit_module.camel_name}}.{{unit.camel_name}}Repository")
     private final {{unit.pascal_name}}Repository {{unit.camel_name}}Repository;
     private final EntityManager entityManager;
     private final ConversionService conversionService;

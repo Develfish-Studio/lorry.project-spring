@@ -6,29 +6,21 @@ return {
   parent = {
     group_id = "org.springframework.boot",
     artifact_id = "spring-boot-starter-parent",
-    version = "4.0.0",
+    version = "4.0.1",
   },
   modules = {},
   properties = {
-    ["studio.develfish.guppy.version"] = "1.0.0-SNAPSHOT",
+    ["guppy.version"] = "1.0.0-SNAPSHOT",
     ["maven-source-plugin.version"] = "3.3.1",
     ["flatten-maven-plugin.version"] = "1.5.0",
+    ["postgresql.version"] = "42.7.8",
+    ["mysql.version"] = "9.5.0",
   },
   dependency_management = {
     dependencies = {
-      { group_id = "studio.develfish.guppy", artifact_id = "common-api", version = "${studio.develfish.guppy.version}" },
-      { group_id = "studio.develfish.guppy", artifact_id = "common-context", version = "${studio.develfish.guppy.version}" },
-      { group_id = "studio.develfish.guppy", artifact_id = "common-text", version = "${studio.develfish.guppy.version}" },
-      { group_id = "studio.develfish.guppy", artifact_id = "events-api", version = "${studio.develfish.guppy.version}" },
-      { group_id = "studio.develfish.guppy", artifact_id = "events-context", version = "${studio.develfish.guppy.version}" },
-      { group_id = "studio.develfish.guppy", artifact_id = "minio-context", version = "${studio.develfish.guppy.version}" },
-      { group_id = "studio.develfish.guppy", artifact_id = "query-api", version = "${studio.develfish.guppy.version}" },
-      { group_id = "studio.develfish.guppy", artifact_id = "query-context", version = "${studio.develfish.guppy.version}" },
-      { group_id = "studio.develfish.guppy", artifact_id = "web-mvc-api", version = "${studio.develfish.guppy.version}" },
-      { group_id = "studio.develfish.guppy", artifact_id = "web-mvc-context", version = "${studio.develfish.guppy.version}" },
-      { group_id = "studio.develfish.guppy", artifact_id = "web-security-context", version = "${studio.develfish.guppy.version}" },
-      { group_id = "studio.develfish.guppy", artifact_id = "web-ws-api", version = "${studio.develfish.guppy.version}" },
-      { group_id = "studio.develfish.guppy", artifact_id = "web-ws-context", version = "${studio.develfish.guppy.version}" },
+      { group_id = "studio.develfish.guppy", artifact_id = "bom", version = "${guppy.version}", scope = "import", type = "pom" },
+      { group_id = "org.postgresql", artifact_id = "postgresql", version = "${postgresql.version}" },
+      { group_id = "com.mysql", artifact_id = "mysql-connector-j", version = "${mysql.version}" },
     }
   },
 }

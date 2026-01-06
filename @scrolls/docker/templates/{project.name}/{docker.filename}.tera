@@ -13,7 +13,7 @@ ARG MODULE_VERSION={{docker.version | default(value = '1.0.0-SNAPSHOT')}}
 {%- for module in docker.modules %}
 ADD {{module}}/src ./{{module}}/src
 {%- endfor %}
-RUN mvn -Drevision=$MODULE_VERSION clean package --projects $MODULE_NAME --also-make
+RUN mvn -Drevision="$MODULE_VERSION" clean package --projects "$MODULE_NAME" --also-make
 
 FROM eclipse-temurin:17-jdk-alpine
 WORKDIR /app
