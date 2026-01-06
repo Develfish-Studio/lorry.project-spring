@@ -2,13 +2,13 @@
 
 local Meta = require('@lorry.utils/lib/Meta')
 local Wrapper = require('@lorry.project/lib/Wrapper')
-local PK = require('./PK')
+local Key = require('./Key')
 local Ref = require('./Ref')
 local Prop = require('./Prop')
 local Formula = require('./Formula')
 
 local Entity = {
-  PK = PK,
+  Key = Key,
   Ref = Ref,
   Prop = Prop,
   Formula = Formula,
@@ -19,17 +19,16 @@ export type Entity = typeof(Entity) & Wrapper.Unwrappable<Unwrapped>
 export type EntityProps = {
   table: string,
   schema: string,
-  keys: {PK.PK},
+  keys: {Key.Key},
   columns: {Prop.Prop},
   refs: {Ref.Ref},
   formulas: {Formula.Formula},
 }
 
 export type Unwrapped = {
-  pk: PK.Unwrapped?,
   schema: string,
   table: string,
-  keys: {PK.Unwrapped},
+  keys: {Key.Unwrapped},
   columns: {Prop.Unwrapped},
   refs: {Ref.Unwrapped},
   formulas: {Formula.Unwrapped},
@@ -45,7 +44,7 @@ export type EntityImpl = Entity & EntityProps
 export type ConfigurerFunc = (this: EntityImpl) -> ()
 
 export type AnyChild =
-  | PK.PK
+  | Key.Key
   | Prop.Prop
   | Ref.Ref
   | Formula.Formula
@@ -89,8 +88,8 @@ end
 function Entity:with_child(child: AnyChild): Entity
   local this = self::EntityImpl
   local tag = Meta:typeof(child)
-  if tag == 'Unit.Entity.PK' then
-      this.keys[#this.keys + 1] = child::PK.PK
+  if tag == 'Unit.Entity.Key' then
+      this.keys[#this.keys + 1] = child::Key.Key
     elseif tag == 'Unit.Entity.Prop' then
       this.columns[#this.columns + 1] = child::Prop.Prop
     elseif tag == 'Unit.Entity.Ref' then
@@ -101,7 +100,7 @@ function Entity:with_child(child: AnyChild): Entity
   return this
 end
 
-function Entity:unwrap_keys(): UnwrappedIndexed<PK.Unwrapped>
+function Entity:unwrap_keys(): UnwrappedIndexed<Key.Unwrapped>
   local this = self::EntityImpl
   local by_name = Meta:table {}
   local array = Meta:array {}
@@ -171,10 +170,8 @@ end
 
 function Entity:unwrap(): Unwrapped
   local this = self::EntityImpl
-  local pk = (if #this.keys > 0 then this.keys[1] else nil)
 
   return {
-    pk = pk and pk:unwrap() or nil,
     schema = this.schema,
     table = this.table,
     keys = this:unwrap_keys(),

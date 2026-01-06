@@ -6,9 +6,12 @@ local Wrapper = require('@lorry.project/lib/Wrapper')
 local Project = require('@lorry.project/lib/Project')
 local Module = require('../Module/Module')
 local Entity = require('./Entity/Entity')
+local Key = require('./Entity/Key')
+local PK = require('./PK')
 
 local Unit = {
-  Entity = Entity
+  Entity = Entity,
+  PK = PK,
 }
 
 export type Unit = typeof(Unit) & Wrapper.Unwrappable<Unwrapped> & {
@@ -28,6 +31,7 @@ export type Unwrapped = {
   unit: UnwrappedUnit,
   package: Module.UnwrappedPackage,
   entity: Entity.Unwrapped,
+  pk: PK.Unwrapped,
 }
 
 export type UnwrappedUnit = {
@@ -101,6 +105,27 @@ function Unit:unwrap_unit(): UnwrappedUnit
   }
 end
 
+function Unit:unwrap_pk(): PK.Unwrapped
+  local this = self::UnitImpl
+  local entity = this.entity::Entity.EntityImpl
+  if #entity.keys == 1 then
+    local key = entity.keys[1]::Key.KeyImpl
+    local pk = PK:new({
+      name = key.name,
+      java_type = key.java_type,
+      is_composite = false,
+    })
+    return pk:unwrap()
+  else
+    local pk = PK:new({
+      name = 'entityId',
+      java_type = Case:snake_to_pascal(this.name) .. 'Entity.EntityId',
+      is_composite = true,
+    })
+    return pk:unwrap()
+  end
+end
+
 function Unit:unwrap(): Unwrapped
   local this = self::UnitImpl
   return {
@@ -109,6 +134,7 @@ function Unit:unwrap(): Unwrapped
     package = this.module:unwrap_package(),
     entity = this.entity:unwrap(),
     unit = this:unwrap_unit(),
+    pk = this:unwrap_pk()
   }
 end
 

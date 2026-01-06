@@ -4,6 +4,9 @@ import lombok.RequiredArgsConstructor;
 
 import {{unit_package.name}}.entity.{{unit.pascal_name}}Entity;
 import {{package.name}}.model.{{projection.name}}.{{resource.pascal_name}}Model;
+{%- if pk.is_composite %}
+import {{package.name}}.request.{{projection.name}}.{{resource.pascal_name}}Request;
+{%- endif %}
 
 import studio.develfish.guppy.common.api.GuppyConverter;
 import org.springframework.context.annotation.Lazy;
@@ -47,4 +50,24 @@ public interface {{resource.pascal_name}}EntityConverter {
                     .build();
         }
     }
+
+    {%- if pk.is_composite %}
+    {# Blank line #}
+    @RequiredArgsConstructor
+    @Component("{{module.camel_name}}.{{resource.camel_name}}EntityConverter.fromId")
+    class FromId implements GuppyConverter<{{resource.pascal_name}}Request.Id, {{unit.pascal_name}}Entity.EntityId> {
+        @Lazy
+        private final ConversionService conversionService;
+
+        public {{unit.pascal_name}}Entity.EntityId convert({{resource.pascal_name}}Request.Id source) {
+            return {{unit.pascal_name}}Entity.EntityId.builder()
+                    {%- for desc in entity.keys.array %}
+                    {%- if projection.context.by_name is not containing(desc.name) %}
+                    .{{desc.camel_name}}(source.get{{desc.pascal_name}}())
+                    {%- endif -%}
+                    {%- endfor %}
+                    .build();
+        }
+    }
+    {%- endif -%}
 }

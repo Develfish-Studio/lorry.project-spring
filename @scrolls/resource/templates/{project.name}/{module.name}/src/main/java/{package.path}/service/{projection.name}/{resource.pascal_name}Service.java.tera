@@ -11,9 +11,9 @@ import studio.develfish.guppy.common.context.service.EvaluatorService;
 import studio.develfish.guppy.common.context.service.GeneratorService;
 import studio.develfish.guppy.query.context.criteria.SpecificationBuilder;
 import studio.develfish.guppy.web.mvc.api.GuppyValidate;
+import studio.develfish.guppy.web.mvc.context.service.GuppyConversionService;
 
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.core.convert.ConversionService;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
@@ -33,7 +33,7 @@ public class {{resource.pascal_name}}Service {
     @Qualifier("{{unit_module.camel_name}}.{{unit.camel_name}}Repository")
     private final {{unit.pascal_name}}Repository {{unit.camel_name}}Repository;
     private final EntityManager entityManager;
-    private final ConversionService conversionService;
+    private final GuppyConversionService conversionService;
     private final EvaluatorService evaluatorService;
     private final GeneratorService generatorService;
 
@@ -137,9 +137,16 @@ public class {{resource.pascal_name}}Service {
         {{resource.pascal_name}}Request.Context context,
         {{resource.pascal_name}}Request.Id key
     ) {
+        {%- if pk.is_composite %}
+        {{unit.pascal_name}}Entity.EntityId entityId = conversionService.convertNotNull(key, {{unit.pascal_name}}Entity.EntityId.class);
         {{unit.pascal_name}}Entity entity = {{unit.camel_name}}Repository
-                .findById(key.get{{entity.pk.pascal_name}}())
+                .findById(entityId)
                 .orElseThrow();
+        {%- else %}
+        {{unit.pascal_name}}Entity entity = {{unit.camel_name}}Repository
+                .findById(key.get{{pk.pascal_name}}())
+                .orElseThrow();
+        {%- endif %}
 
         {%- if requests.remove.fetches | length %}
         {% for fetch in requests.remove.fetches %}
@@ -197,8 +204,14 @@ public class {{resource.pascal_name}}Service {
         {{resource.pascal_name}}Request.Context context,
         Collection<{{resource.pascal_name}}Request.Id> keys
     ) {
+        {%- if pk.is_composite %}
+        Collection<{{unit.pascal_name}}Entity.EntityId> entityIds = conversionService.convertNotNullCollection(keys, {{unit.pascal_name}}Entity.EntityId.class);
         Collection<{{unit.pascal_name}}Entity> entities = {{unit.camel_name}}Repository
-                .findAllById(keys.stream().map({{resource.pascal_name}}Request.Id::get{{entity.pk.pascal_name}}).toList());
+                .findAllById(entityIds);
+        {%- else %}
+        Collection<{{unit.pascal_name}}Entity> entities = {{unit.camel_name}}Repository
+                .findAllById(keys.stream().map({{resource.pascal_name}}Request.Id::get{{pk.pascal_name}}).toList());
+        {%- endif %}
 
         {%- if requests.remove.fetches | length %}
         {% for fetch in requests.remove.fetches %}
@@ -508,10 +521,16 @@ public class {{resource.pascal_name}}Service {
         {{resource.pascal_name}}Request.Id key,
         {{resource.pascal_name}}Request.Replace request
     ) {
+        {%- if pk.is_composite %}
+        {{unit.pascal_name}}Entity.EntityId entityId = conversionService.convertNotNull(key, {{unit.pascal_name}}Entity.EntityId.class);
         {{unit.pascal_name}}Entity entity = {{unit.camel_name}}Repository
-                .findById(key.get{{entity.pk.pascal_name}}())
+                .findById(entityId)
                 .orElseThrow();
-
+        {%- else %}
+        {{unit.pascal_name}}Entity entity = {{unit.camel_name}}Repository
+                .findById(key.get{{pk.pascal_name}}())
+                .orElseThrow();
+        {%- endif %}
         {%- if requests.replace.fetches | length %}
         {% for fetch in requests.replace.fetches %}
         {%- if fetch is containing('expression') %}
@@ -689,9 +708,16 @@ public class {{resource.pascal_name}}Service {
         {{resource.pascal_name}}Request.Context context,
         {{resource.pascal_name}}Request.Id key
     ) {
+        {%- if pk.is_composite %}
+        {{unit.pascal_name}}Entity.EntityId entityId = conversionService.convertNotNull(key, {{unit.pascal_name}}Entity.EntityId.class);
         {{unit.pascal_name}}Entity entity = {{unit.camel_name}}Repository
-                .findById(key.get{{entity.pk.pascal_name}}())
+                .findById(entityId)
                 .orElseThrow();
+        {%- else %}
+        {{unit.pascal_name}}Entity entity = {{unit.camel_name}}Repository
+                .findById(key.get{{pk.pascal_name}}())
+                .orElseThrow();
+        {%- endif %}
 
         {%- if requests.get.fetches | length %}
         {% for fetch in requests.get.fetches %}

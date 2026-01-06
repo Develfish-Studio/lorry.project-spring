@@ -18,6 +18,9 @@ import org.hibernate.annotations.Type;
 @AllArgsConstructor
 @Entity(name = "{{module.pascal_name}}{{unit.pascal_name}}Entity")
 @Table(schema = "{{entity.schema}}", name = "{{entity.table}}")
+{%- if entity.keys.array | length > 1 %}
+@IdClass({{unit.pascal_name}}Entity.EntityId.class)
+{%- endif %}
 public class {{unit.pascal_name}}Entity {
     {%- for desc in entity.keys.array %}
     {# Blank line #}
@@ -63,5 +66,14 @@ public class {{unit.pascal_name}}Entity {
     private List<{{desc.unit.package.name}}.entity.{{desc.unit.pascal_name}}Entity> {{desc.camel_name}};
     {%- endif %}
     {%- endfor -%}
+    {%- endif %}
+    {%- if entity.keys.array | length > 1 %}
+    {# Blank line #}
+    @Builder(toBuilder = true)
+    public record EntityId(
+        {%- for desc in entity.keys.array %}
+        {{desc.java_type}} {{desc.camel_name}}{% if not loop.last %},{% endif %}
+        {%- endfor %}
+    ) {}
     {%- endif %}
 }

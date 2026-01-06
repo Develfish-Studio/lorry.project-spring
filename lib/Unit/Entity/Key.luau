@@ -4,16 +4,16 @@ local Meta = require('@lorry.utils/lib/Meta')
 local Case = require('@lorry.utils/lib/Case')
 local Wrapper = require('@lorry.project/lib/Wrapper')
 
-local PK = {}
+local Key = {}
 
-export type PK = typeof(PK) & Wrapper.Unwrappable<Unwrapped>
+export type Key = typeof(Key) & Wrapper.Unwrappable<Unwrapped>
 
-export type PKProps = {
+export type KeyProps = {
   name: string,
   updatable: boolean?,
   generator_type: string?,
   java_type: string,
-  db_type: string,
+  db_type: string?,
   column_definition: string?,
 }
 
@@ -25,18 +25,18 @@ export type Unwrapped = {
   updatable: boolean?,
   generator_type: string?,
   java_type: string,
-  db_type: string,
+  db_type: string?,
   column_definition: string?,
 }
 
-export type PKImpl = PK & PKProps
+export type KeyImpl = Key & KeyProps
 
-function PK:new(o: PKProps): PK
-  return Meta:type(o, self, "Unit.Entity.PK")
+function Key:new(o: KeyProps): Key
+  return Meta:type(o, self, "Unit.Entity.Key")
 end
 
-function PK:uuid(name: string): PK
-  return PK:new({
+function Key:uuid(name: string): Key
+  return Key:new({
     name = name,
     generator_type = "random",
     java_type = "java.util.UUID",
@@ -45,8 +45,8 @@ function PK:uuid(name: string): PK
   })
 end
 
-function PK:text(name: string): PK
-  return PK:new({
+function Key:text(name: string): Key
+  return Key:new({
     name = name,
     java_type = "java.lang.String",
     db_type = "text",
@@ -54,32 +54,32 @@ function PK:text(name: string): PK
   })
 end
 
-function PK:decimal(name: string): PK
-  return PK:new({
+function Key:decimal(name: string): Key
+  return Key:new({
     name = name,
     java_type = "java.math.BigDecimal",
     db_type = "numeric(38,2)",
   })
 end
 
-function PK:int(name: string): PK
-  return PK:new({
+function Key:int(name: string): Key
+  return Key:new({
     name = name,
     java_type = "java.lang.Integer",
     db_type = "int4"
   })
 end
 
-function PK:long(name: string): PK
-  return PK:new({
+function Key:long(name: string): Key
+  return Key:new({
     name = name,
     java_type = "java.lang.Long",
     db_type = "int8"
   })
 end
 
-function PK:unwrap(): Unwrapped
-  local this = self::PKImpl
+function Key:unwrap(): Unwrapped
+  local this = self::KeyImpl
   return {
     name = this.name,
     snake_name = this.name,
@@ -93,4 +93,4 @@ function PK:unwrap(): Unwrapped
   }
 end
 
-return PK
+return Key

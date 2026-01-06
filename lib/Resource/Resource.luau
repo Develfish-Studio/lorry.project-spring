@@ -5,6 +5,7 @@ local Case = require('@lorry.utils/lib/Case')
 local Project = require('@lorry.project/lib/Project')
 local Wrapper = require('@lorry.project/lib/Wrapper')
 local Unit = require('../Unit/Unit')
+local PK = require('../Unit/PK')
 local Entity = require('../Unit/Entity/Entity')
 local Module = require('../Module/Module')
 local Target = require('./Target')
@@ -68,6 +69,7 @@ export type Unwrapped = {
   project: Project.UnwrappedProject,
   module: Module.UnwrappedModule,
   unit: Unit.UnwrappedUnit,
+  pk: PK.Unwrapped,
   package: Module.UnwrappedPackage,
   unit_package: Module.UnwrappedPackage,
   unit_module: Module.UnwrappedModule,
@@ -397,6 +399,7 @@ function Resource:unwrap(): Unwrapped
   return {
     project = unit.module:unwrap_project(),
     module = this:unwrap_module(),
+    pk = unit:unwrap_pk(),
     unit = unit:unwrap_unit(),
     unit_module = unit.module:unwrap_module(),
     package = this:unwrap_package(),

@@ -4,7 +4,7 @@ local Meta = require('@lorry.utils/lib/Meta')
 local Wrapper = require('@lorry.project/lib/Wrapper')
 local Unit = require('../Unit/Unit')
 local Entity = require('../Unit/Entity/Entity')
-local PK = require('../Unit/Entity/PK')
+local Key = require('../Unit/Entity/Key')
 local Prop = require('../Unit/Entity/Prop')
 local Ref = require('../Unit/Entity/Ref')
 local Fetch = require('./Fetch')
@@ -27,7 +27,7 @@ export type RequestProps = {
 
 export type Unwrapped = {
   name: string,
-  keys: Entity.UnwrappedIndexed<PK.PK>,
+  keys: Entity.UnwrappedIndexed<Key.Key>,
   columns: Entity.UnwrappedIndexed<Prop.Unwrapped>,
   refs: Entity.UnwrappedIndexed<Ref.Unwrapped>,
   overrides: {[string]: Override.Unwrapped},
