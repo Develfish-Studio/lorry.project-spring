@@ -1,4 +1,4 @@
-FROM maven:3.9.5-eclipse-temurin-17-alpine AS loader
+FROM maven:3.9.12-eclipse-temurin-25-alpine AS loader
 WORKDIR /app
 
 ADD pom.xml .
@@ -15,12 +15,13 @@ ADD {{module}}/src ./{{module}}/src
 {%- endfor %}
 RUN mvn -Drevision="$MODULE_VERSION" clean package --projects "$MODULE_NAME" --also-make
 
-FROM eclipse-temurin:17-jdk-alpine
+FROM eclipse-temurin:25-jdk-alpine
 WORKDIR /app
 VOLUME /tmp
 ARG MODULE_NAME
 ARG MODULE_VERSION={{docker.version | default(value = '1.0.0-SNAPSHOT')}}
 ENV JAR_FILE="/app/${MODULE_NAME}/target/${MODULE_NAME}-${MODULE_VERSION}-spring-boot.jar"
+ENV JAVA_TOOL_OPTIONS="-Xms128m -Xmx512m"
 COPY --from=builder ${JAR_FILE} /app/app.jar
 RUN ls -la .
-ENTRYPOINT java $JAVA_OPTS -jar /app/app.jar
+ENTRYPOINT ["java", "-jar", "/app/app.jar"]

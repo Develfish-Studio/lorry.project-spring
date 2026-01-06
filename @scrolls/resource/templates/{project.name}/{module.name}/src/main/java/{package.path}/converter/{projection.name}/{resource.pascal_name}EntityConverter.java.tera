@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
 public interface {{resource.pascal_name}}EntityConverter {
 
     @RequiredArgsConstructor
-    @Component("{{module.camel_name}}.{{resource.camel_name}}EntityConverter.toModel")
+    @Component
     class ToModel implements GuppyConverter<{{unit.pascal_name}}Entity, {{resource.pascal_name}}Model> {
         @Lazy
         private final ConversionService conversionService;
@@ -54,7 +54,7 @@ public interface {{resource.pascal_name}}EntityConverter {
     {%- if pk.is_composite %}
     {# Blank line #}
     @RequiredArgsConstructor
-    @Component("{{module.camel_name}}.{{resource.camel_name}}EntityConverter.fromId")
+    @Component
     class FromId implements GuppyConverter<{{resource.pascal_name}}Request.Id, {{unit.pascal_name}}Entity.EntityId> {
         @Lazy
         private final ConversionService conversionService;

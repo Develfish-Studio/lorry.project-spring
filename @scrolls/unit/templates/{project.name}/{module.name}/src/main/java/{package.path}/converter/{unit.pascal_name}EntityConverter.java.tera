@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 public interface {{unit.pascal_name}}EntityConverter {
 
     @RequiredArgsConstructor
-    @Component("{{module.camel_name}}.{{unit.camel_name}}EntityConverter.toModel")
+    @Component
     class ToModel implements GuppyConverter<{{unit.pascal_name}}Entity, {{unit.pascal_name}}Model> {
         @Lazy
         private final ConversionService conversionService;

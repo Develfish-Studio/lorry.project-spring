@@ -30,7 +30,6 @@ import org.springframework.data.domain.Pageable;
 @RequiredArgsConstructor
 public class {{resource.pascal_name}}Service {
 
-    @Qualifier("{{unit_module.camel_name}}.{{unit.camel_name}}Repository")
     private final {{unit.pascal_name}}Repository {{unit.camel_name}}Repository;
     private final EntityManager entityManager;
     private final GuppyConversionService conversionService;

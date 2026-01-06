@@ -15,8 +15,6 @@ import lombok.NoArgsConstructor;
 import studio.develfish.guppy.query.api.GuppyOrderStatement;
 import studio.develfish.guppy.query.api.GuppyWhereStatement;
 
-import org.springdoc.core.annotations.ParameterObject;
-
 import java.util.Collection;
 import java.util.Optional;
 
