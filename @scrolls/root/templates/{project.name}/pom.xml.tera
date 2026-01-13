@@ -31,6 +31,25 @@
     {%- endfor %}
     </properties>
 
+    <profiles>
+        <profile>
+            <id>ntr1x</id>
+            <activation>
+                <property>
+                    <name>env.BUILD_PROFILE</name>
+                    <value>ntr1x</value>
+                </property>
+            </activation>
+            <repositories>
+                <repository>
+                    <id>ntr1x</id>
+                    <name>NTR1X Repo</name>
+                    <url>https://nexus.ntr1x.com/repository/maven-public/</url>
+                </repository>
+            </repositories>
+        </profile>
+    </profiles>
+
     <dependencyManagement>
         <dependencies>
         {%- for dependency in pom.dependency_management.dependencies %}

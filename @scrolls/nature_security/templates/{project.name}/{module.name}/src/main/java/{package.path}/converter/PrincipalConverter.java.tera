@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 public interface PrincipalConverter {
 
     @RequiredArgsConstructor
-    @Component("serviceSecurity.principalConverter.toModel")
+    @Component
     class ToModel implements GuppyConverter<Principal, PrincipalModel> {
         public PrincipalModel convert(Principal source) {
             try {

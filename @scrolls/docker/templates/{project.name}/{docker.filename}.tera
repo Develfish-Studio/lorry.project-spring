@@ -1,6 +1,7 @@
 FROM maven:3.9.12-eclipse-temurin-25-alpine AS loader
+ARG BUILD_PROFILE=default
+ENV BUILD_PROFILE="${BUILD_PROFILE}"
 WORKDIR /app
-
 ADD pom.xml .
 {%- for module in docker.modules %}
 ADD {{module}}/pom.xml ./{{module}}/pom.xml
@@ -10,6 +11,8 @@ RUN mvn dependency:go-offline
 FROM loader AS builder
 ARG MODULE_NAME
 ARG MODULE_VERSION={{docker.version | default(value = '1.0.0-SNAPSHOT')}}
+ARG BUILD_PROFILE=default
+ENV BUILD_PROFILE="${BUILD_PROFILE}"
 {%- for module in docker.modules %}
 ADD {{module}}/src ./{{module}}/src
 {%- endfor %}
@@ -20,6 +23,8 @@ WORKDIR /app
 VOLUME /tmp
 ARG MODULE_NAME
 ARG MODULE_VERSION={{docker.version | default(value = '1.0.0-SNAPSHOT')}}
+ARG BUILD_PROFILE=default
+ENV BUILD_PROFILE="${BUILD_PROFILE}"
 ENV JAR_FILE="/app/${MODULE_NAME}/target/${MODULE_NAME}-${MODULE_VERSION}-spring-boot.jar"
 ENV JAVA_TOOL_OPTIONS="-Xms128m -Xmx512m"
 COPY --from=builder ${JAR_FILE} /app/app.jar

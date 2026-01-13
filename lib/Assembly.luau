@@ -84,7 +84,7 @@ function Assembly:unwrap(): Unwrapped
     pom = this.module:unwrap_pom(),
     package = this.module:unwrap_package(),
     module = this.module:unwrap_module(),
-    natures = this.module.natures,
+    natures = this.module:unwrap_natures(),
     nested_modules = Wrapper:unwrap_array(this.nested_modules)
   }
 end

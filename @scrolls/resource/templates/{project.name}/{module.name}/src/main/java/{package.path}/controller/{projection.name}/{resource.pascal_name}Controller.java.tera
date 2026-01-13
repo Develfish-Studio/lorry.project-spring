@@ -17,6 +17,7 @@ import {{package.name}}.service.{{projection.name}}.{{resource.pascal_name}}Serv
 import {{package.name}}.request.{{projection.name}}.{{resource.pascal_name}}Request;
 import {{package.name}}.response.{{projection.name}}.{{resource.pascal_name}}Response;
 
+import org.jspecify.annotations.NullMarked;
 import studio.develfish.guppy.common.api.GuppyView;
 
 import org.springdoc.core.annotations.ParameterObject;
@@ -30,6 +31,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 @Tag(name = "{{resource.title}}"{% if resource.description is defined %}, description = "{{resource.description}}"{% endif %})
 @RequestMapping("/{{projection.name}}/{{unit.snake_name}}")
 @RequiredArgsConstructor
+@NullMarked
 public class {{resource.pascal_name}}Controller {
 
     private final {{resource.pascal_name}}Service {{resource.camel_name}}Service;

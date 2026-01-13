@@ -20,7 +20,7 @@ export type Action = typeof(Action) & Wrapper.Unwrappable<Unwrapped>
 
 export type ActionProps = {
   method: string,
-  role: Role.Role,
+  role: Role.Role?,
   route: string?,
   fetches: {Fetch.Fetch},
   filters: {Filter.Filter},
@@ -31,11 +31,10 @@ export type ActionProps = {
 export type Unwrapped = {
   method: string,
   route: string?,
-  role: Role.Unwrapped,
+  role: Role.Unwrapped?,
 }
 
 export type ActionImpl = Action & ActionProps
-
 
 export type ConfigurerFunc = (this: ActionImpl) -> ()
 
@@ -50,10 +49,9 @@ function Action:new(o: ActionProps): Action
   return Meta:type(o, self, "Resource.Action")
 end
 
-function Action:from(method: string, role: string): Action
+function Action:from(method: string): Action
   return Action:new({
     method = method,
-    role = Role:from(role),
     overrides = Meta:array {},
     filters = Meta:array {},
     fetches = Meta:array {},
@@ -94,40 +92,46 @@ function Action:with_child(child: AnyChild): Action
   return this
 end
 
-function Action:create(role: string): Action
-  return Action:from('create', role)
+function Action:with_role_expression(expression: string?): Action
+  local this = self::ActionImpl
+  this.role = expression and Role:from(expression) or nil
+  return this
 end
 
-function Action:remove(role: string): Action
-  return Action:from('remove', role)
+function Action:create(role: string?): Action
+  return Action:from('create'):with_role_expression(role)
 end
 
-function Action:delete(role: string): Action
-  return Action:from('delete', role)
+function Action:remove(role: string?): Action
+  return Action:from('remove'):with_role_expression(role)
 end
 
-function Action:update(role: string): Action
-  return Action:from('update', role)
+function Action:delete(role: string?): Action
+  return Action:from('delete'):with_role_expression(role)
 end
 
-function Action:upsert(role: string): Action
-  return Action:from('upsert', role)
+function Action:update(role: string?): Action
+  return Action:from('update'):with_role_expression(role)
 end
 
-function Action:replace(role: string): Action
-  return Action:from('replace', role)
+function Action:upsert(role: string?): Action
+  return Action:from('upsert'):with_role_expression(role)
 end
 
-function Action:get(role: string): Action
-  return Action:from('get', role)
+function Action:replace(role: string?): Action
+  return Action:from('replace'):with_role_expression(role)
 end
 
-function Action:select(role: string): Action
-  return Action:from('select', role)
+function Action:get(role: string?): Action
+  return Action:from('get'):with_role_expression(role)
 end
 
-function Action:find(role: string): Action
-  return Action:from('find', role)
+function Action:select(role: string?): Action
+  return Action:from('select'):with_role_expression(role)
+end
+
+function Action:find(role: string?): Action
+  return Action:from('find'):with_role_expression(role)
 end
 
 function Action:with_route(route: string): Action
@@ -141,7 +145,7 @@ function Action:unwrap(): Unwrapped
   return {
     method = this.method,
     route = this.route,
-    role = this.role:unwrap(),
+    role = this.role and this.role:unwrap() or nil,
   }
 end
 

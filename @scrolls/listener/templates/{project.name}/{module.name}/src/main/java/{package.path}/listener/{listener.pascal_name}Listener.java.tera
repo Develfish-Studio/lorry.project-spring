@@ -4,17 +4,17 @@ import module java.base;
 import io.cloudevents.CloudEvent;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
-import studio.develfish.guppy.common.events.CloudEventsConstants;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.support.Acknowledgment;
 import org.springframework.stereotype.Component;
+import studio.develfish.guppy.consumer.context.GuppyConsumerConstants;
 
 @Slf4j
-@Component("{{module.camel_name}}.{{listener.camel_name}}Listener")
+@Component
 public class {{listener.pascal_name}}Listener {
 {% if listener.batch %}
     @KafkaListener(
-        containerFactory = CloudEventsConstants.CONTAINER_FACTORY_CLOUD_EVENT,
+        containerFactory = GuppyConsumerConstants.CONTAINER_FACTORY_CLOUD_EVENT,
         batch = "true",
         groupId = "${app.{{module.name}}.listener.{{listener.snake_name}}.group_id:{{listener.group_id}}}",
         topicPattern = "${app.{{module.name}}.listener.{{listener.snake_name}}.topic_pattern:{{listener.topic_pattern}}}"
@@ -32,7 +32,7 @@ public class {{listener.pascal_name}}Listener {
     }
 {% else %}
     @KafkaListener(
-        containerFactory = CloudEventsConstants.CONTAINER_FACTORY_CLOUD_EVENT,
+        containerFactory = GuppyConsumerConstants.CONTAINER_FACTORY_CLOUD_EVENT,
         groupId = "${app.{{module.name}}.listener.{{listener.snake_name}}.group_id:{{listener.group_id}}}",
         topicPattern = "${app.{{module.name}}.listener.{{listener.snake_name}}.topic_pattern:{{listener.topic_pattern}}}"
     )

@@ -2,6 +2,7 @@
 
 local Meta = require('@lorry.utils/lib/Meta')
 local Case = require('@lorry.utils/lib/Case')
+local Array = require('@lorry.utils/lib/Array')
 local Wrapper = require('@lorry.project/lib/Wrapper')
 local Project = require('@lorry.project/lib/Project')
 local POM = require('../POM')
@@ -17,7 +18,6 @@ export type ModuleNature = 'app' | 'web' | 'data' | 'minio' | 'security'
 
 export type Module = typeof(Module) & Wrapper.Unwrappable<Unwrapped> & {
   name: string,
-  natures: {ModuleNature},
 }
 
 export type ModuleProps = {
@@ -174,6 +174,26 @@ function Module:unwrap_service(): UnwrappedService
   }
 end
 
+function Module:unwrap_natures(): {ModuleNature}
+  local this = self::ModuleImpl
+  local natures: {ModuleNature: boolean} = Meta:table {}
+  for _, nature in this.natures do
+    natures[nature] = this
+  end
+  for _, ref in this.references do
+    local target = ref.target::ModuleImpl
+    local target_natures = target:unwrap_natures()
+    for _, nature in target_natures do
+      natures[nature] = nature::ModuleNature
+    end
+  end
+  local keyset: {ModuleNature} = Meta:array {}
+  for k, _ in natures do
+    keyset[#keyset + 1] = k::ModuleNature
+  end
+  return keyset
+end
+
 function Module:unwrap(): Unwrapped
   local this = self::ModuleImpl
   return {
@@ -182,7 +202,7 @@ function Module:unwrap(): Unwrapped
     package = this:unwrap_package(),
     module = this:unwrap_module(),
     service = this:unwrap_service(),
-    natures = this.natures,
+    natures = this:unwrap_natures(),
     dependencies = Wrapper:unwrap_array(this.dependencies),
     references = Wrapper:unwrap_array(this.references),
   }

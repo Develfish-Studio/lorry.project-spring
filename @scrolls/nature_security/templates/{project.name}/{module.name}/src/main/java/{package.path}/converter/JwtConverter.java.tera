@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 public interface JwtConverter {
 
     @RequiredArgsConstructor
-    @Component("serviceSecurity.jwtConverter.toModel")
+    @Component
     class ToModel implements GuppyConverter<Jwt, PrincipalModel> {
         public PrincipalModel convert(Jwt jwt) {
             try {

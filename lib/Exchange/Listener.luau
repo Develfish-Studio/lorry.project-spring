@@ -108,15 +108,16 @@ end
 
 function Listener:unwrap_listener(): UnwrappedListener
   local this = self::ListenerImpl
+  local kebab_name = Case:snake_to_kebab(this.name)
   return {
     name = this.name,
     snake_name = this.name,
     camel_name = Case:snake_to_camel(this.name),
     pascal_name = Case:snake_to_pascal(this.name),
-    kebab_name = Case:snake_to_kebab(this.name),
+    kebab_name = kebab_name,
     id = this.id,
     container_factory = this.container_factory,
-    topic_pattern = this.topic_pattern or this.name,
+    topic_pattern = this.topic_pattern or kebab_name,
     group_id = this.group_id or this.module.name .. '.' .. this.name,
     client_id_prefix = this.client_id_prefix,
     concurrency = this.concurrency,

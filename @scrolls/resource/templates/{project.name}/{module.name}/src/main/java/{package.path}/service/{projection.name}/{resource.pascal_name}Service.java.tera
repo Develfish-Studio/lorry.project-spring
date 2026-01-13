@@ -6,6 +6,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 
 import lombok.RequiredArgsConstructor;
+import org.jspecify.annotations.NullMarked;
 import studio.develfish.guppy.events.api.GuppyEvent;
 import studio.develfish.guppy.common.context.service.EvaluatorService;
 import studio.develfish.guppy.common.context.service.GeneratorService;
@@ -27,6 +28,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 @Service
+@NullMarked
 @RequiredArgsConstructor
 public class {{resource.pascal_name}}Service {
 
@@ -117,7 +119,7 @@ public class {{resource.pascal_name}}Service {
 
         entityManager.refresh(entity);
 
-        {{resource.pascal_name}}Model created = conversionService.convert(entity, {{resource.pascal_name}}Model.class);
+        {{resource.pascal_name}}Model created = conversionService.convertNotNull(entity, {{resource.pascal_name}}Model.class);
 
         return {{resource.pascal_name}}Response.Create
             .builder()
@@ -182,7 +184,7 @@ public class {{resource.pascal_name}}Service {
         {%- endfor %}
         {%- endif %}
 
-        {{resource.pascal_name}}Model removed = conversionService.convert(entity, {{resource.pascal_name}}Model.class);
+        {{resource.pascal_name}}Model removed = conversionService.convertNotNull(entity, {{resource.pascal_name}}Model.class);
 
         {{unit.camel_name}}Repository.delete(entity);
 
@@ -253,7 +255,7 @@ public class {{resource.pascal_name}}Service {
 
         Collection<{{resource.pascal_name}}Model> removed = entities
                 .stream()
-                .map(entity -> conversionService.convert(entity, {{resource.pascal_name}}Model.class))
+                .map(entity -> conversionService.convertNotNull(entity, {{resource.pascal_name}}Model.class))
                 .toList();
 
         {{unit.camel_name}}Repository.deleteAll(entities);
@@ -364,7 +366,7 @@ public class {{resource.pascal_name}}Service {
 
         entityManager.refresh(entity);
 
-        {{resource.pascal_name}}Model updated = conversionService.convert(entity, {{resource.pascal_name}}Model.class);
+        {{resource.pascal_name}}Model updated = conversionService.convertNotNull(entity, {{resource.pascal_name}}Model.class);
 
         return {{resource.pascal_name}}Response.Update
             .builder()
@@ -500,7 +502,7 @@ public class {{resource.pascal_name}}Service {
 
         entityManager.refresh(entity);
 
-        {{resource.pascal_name}}Model updated = conversionService.convert(entity, {{resource.pascal_name}}Model.class);
+        {{resource.pascal_name}}Model updated = conversionService.convertNotNull(entity, {{resource.pascal_name}}Model.class);
 
         return {{resource.pascal_name}}Response.Upsert
             .builder()
@@ -565,7 +567,7 @@ public class {{resource.pascal_name}}Service {
         {%- endfor %}
         {%- endif %}
 
-        {{resource.pascal_name}}Model removed = conversionService.convert(entity, {{resource.pascal_name}}Model.class);
+        {{resource.pascal_name}}Model removed = conversionService.convertNotNull(entity, {{resource.pascal_name}}Model.class);
 
         {{unit.pascal_name}}Entity.{{unit.pascal_name}}EntityBuilder builder = entity.toBuilder();
         {# Blank line #}
@@ -586,7 +588,7 @@ public class {{resource.pascal_name}}Service {
 
         entityManager.refresh(entity);
 
-        {{resource.pascal_name}}Model created = conversionService.convert(entity, {{resource.pascal_name}}Model.class);
+        {{resource.pascal_name}}Model created = conversionService.convertNotNull(entity, {{resource.pascal_name}}Model.class);
 
         return {{resource.pascal_name}}Response.Replace
             .builder()
@@ -696,7 +698,7 @@ public class {{resource.pascal_name}}Service {
 
         return {{unit.camel_name}}Repository
                 .findAll(specification, pageable)
-                .map(item -> conversionService.convert(item, {{resource.pascal_name}}Model.class));
+                .map(item -> conversionService.convertNotNull(item, {{resource.pascal_name}}Model.class));
     }
     {%- endif %}
 
@@ -753,7 +755,7 @@ public class {{resource.pascal_name}}Service {
         {%- endfor %}
         {%- endif %}
 
-        {{resource.pascal_name}}Model result = conversionService.convert(entity, {{resource.pascal_name}}Model.class);
+        {{resource.pascal_name}}Model result = conversionService.convertNotNull(entity, {{resource.pascal_name}}Model.class);
         return result;
     }
     {%- endif %}
@@ -816,7 +818,7 @@ public class {{resource.pascal_name}}Service {
 
         return {{unit.camel_name}}Repository
                 .findOne(specification)
-                .map(item -> conversionService.convert(item, {{resource.pascal_name}}Model.class))
+                .map(item -> conversionService.convertNotNull(item, {{resource.pascal_name}}Model.class))
                 .orElse(null);
     }
     {%- endif %}
