@@ -1,0 +1,14 @@
+spring:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://auth.local.example.com/realms/example-realm
+
+guppy:
+  openid:
+    client:
+      issuer-uri: ${spring.security.oauth2.resourceserver.jwt.issuer-uri}
+      client-id: example-client
+      client-secret: example-secret
+      redirectUri: /

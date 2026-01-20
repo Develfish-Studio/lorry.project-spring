@@ -1,17 +1,18 @@
 package {{package.name}};
 
 import org.springframework.boot.autoconfigure.AutoConfiguration;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.ComponentScan;
 {%- if natures is containing('data') %}
 import org.springframework.boot.persistence.autoconfigure.EntityScan;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 {%- endif %}
 
 @AutoConfiguration
 {%- if natures is containing('data') %}
 @EnableJpaRepositories
-@ComponentScan
 @EntityScan
 {%- endif %}
+@ComponentScan(excludeFilters = @ComponentScan.Filter(SpringBootApplication.class))
 public class {{module.pascal_name}}AutoConfiguration {
 }

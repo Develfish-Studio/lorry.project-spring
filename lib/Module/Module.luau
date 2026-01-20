@@ -2,7 +2,7 @@
 
 local Meta = require('@lorry.utils/lib/Meta')
 local Case = require('@lorry.utils/lib/Case')
-local Array = require('@lorry.utils/lib/Array')
+local Table = require('@lorry.utils/lib/Table')
 local Wrapper = require('@lorry.project/lib/Wrapper')
 local Project = require('@lorry.project/lib/Project')
 local POM = require('../POM')
@@ -14,7 +14,8 @@ local Module = {
   Reference = Reference,
 }
 
-export type ModuleNature = 'app' | 'web' | 'data' | 'minio' | 'security'
+export type ModuleNatureScope = 'source' | 'runtime'
+export type ModuleNature = 'app' | 'web' | 'data' | 'openid-client' | 'openid-proxy' | 's3-client' | 's3-proxy'
 
 export type Module = typeof(Module) & Wrapper.Unwrappable<Unwrapped> & {
   name: string,
@@ -23,7 +24,7 @@ export type Module = typeof(Module) & Wrapper.Unwrappable<Unwrapped> & {
 export type ModuleProps = {
   parent: POM.POM,
   name: string,
-  natures: {ModuleNature},
+  natures: {[ModuleNature]: ModuleNatureScope},
   dependencies: {Dependency.Dependency},
   references: {Reference.Reference},
 }
@@ -58,7 +59,7 @@ export type Unwrapped = {
   package: UnwrappedPackage,
   module: UnwrappedModule,
   service: UnwrappedService,
-  natures: {ModuleNature},
+  natures: {[ModuleNature]: ModuleNatureScope},
   dependencies: {Dependency.Unwrapped},
   references: {Reference.Unwrapped},
 }
@@ -77,7 +78,7 @@ function Module:from(parent: POM.POM, name: string): Module
   return Module:new({
     parent = parent,
     name = name,
-    natures = Meta:array {},
+    natures = Meta:table {},
     dependencies = Meta:array {},
     references = Meta:array {},
   })
@@ -110,10 +111,10 @@ function Module:with_child(child: AnyChild): Module
   return this
 end
 
-function Module:with_natures(natures: {ModuleNature}): Module
+function Module:with_natures(natures: {ModuleNature}, scope: ModuleNatureScope?): Module
   local this = self::ModuleImpl
   for _, nature in natures do
-    this.natures[#this.natures + 1] = nature::ModuleNature
+    this.natures[nature::ModuleNature] = scope or 'source'
   end
   return this
 end
@@ -174,24 +175,20 @@ function Module:unwrap_service(): UnwrappedService
   }
 end
 
-function Module:unwrap_natures(): {ModuleNature}
+function Module:unwrap_natures(): {[ModuleNature]: ModuleNatureScope}
   local this = self::ModuleImpl
-  local natures: {ModuleNature: boolean} = Meta:table {}
-  for _, nature in this.natures do
-    natures[nature] = this
-  end
+  local natures: {[ModuleNature]: ModuleNatureScope} = Meta:table {}
   for _, ref in this.references do
     local target = ref.target::ModuleImpl
     local target_natures = target:unwrap_natures()
-    for _, nature in target_natures do
-      natures[nature] = nature::ModuleNature
+    for nature, scope in target_natures do
+      natures[nature::ModuleNature] = 'runtime'
     end
   end
-  local keyset: {ModuleNature} = Meta:array {}
-  for k, _ in natures do
-    keyset[#keyset + 1] = k::ModuleNature
+  for nature, scope in this.natures do
+    natures[nature::ModuleNature] = scope::ModuleNatureScope
   end
-  return keyset
+  return natures
 end
 
 function Module:unwrap(): Unwrapped

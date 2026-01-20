@@ -1,7 +1,0 @@
-package {{package.name}}.config;
-
-import org.springframework.context.annotation.Configuration;
-
-@Configuration
-public class {{module.pascal_name}}Configuration {
-}

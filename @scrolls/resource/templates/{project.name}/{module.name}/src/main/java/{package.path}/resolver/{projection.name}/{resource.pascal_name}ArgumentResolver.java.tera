@@ -2,7 +2,7 @@ package {{package.name}}.resolver.{{projection.name}};
 
 import module java.base;
 import {{package.name}}.request.{{projection.name}}.{{resource.pascal_name}}Request;
-import studio.develfish.guppy.web.mvc.api.GuppyArgumentResolver;
+import studio.develfish.guppy.web.api.GuppyArgumentResolver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.core.MethodParameter;

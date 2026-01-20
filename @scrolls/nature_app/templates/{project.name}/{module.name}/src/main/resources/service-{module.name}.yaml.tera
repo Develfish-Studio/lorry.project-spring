@@ -1,19 +1,6 @@
 spring:
   config:
     import:
-      {%- if natures is containing('app') %}
-      - optional:classpath:nature-app.yaml
-      {%- endif %}
-      {%- if natures is containing('web') %}
-      - optional:classpath:nature-web.yaml
-      {%- endif %}
-      {%- if natures is containing('data') %}
-      - optional:classpath:nature-data.yaml
-      {%- endif %}
-      {%- if natures is containing('minio') %}
-      - optional:classpath:nature-minio.yaml
-      {%- endif %}
-      {%- if natures is containing('security') %}
-      - optional:classpath:nature-security.yaml
-      {%- endif %}
-      - optional:classpath:service-{{module.name}}.yaml
+      {%- for nature, scope in natures %}
+      - optional:classpath:nature-{{ nature }}.yaml
+      {%- endfor %}

@@ -1,6 +1,0 @@
-spring:
-  application:
-    name: {{module.name}}
-  config:
-    import:
-      - optional:classpath:assembly-{{module.name}}.yaml

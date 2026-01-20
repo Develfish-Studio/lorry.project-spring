@@ -28,7 +28,7 @@
             {%- endif %}
         </dependency>
         {%- endfor %}
-        {%- if natures is containing('data') %}
+        {%- if natures is containing('data') and natures['data'] == 'source' %}
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
@@ -40,7 +40,7 @@
             <scope>provided</scope>
         </dependency>
     </dependencies>
-
+    {%- if natures is containing('app') and natures['app'] == 'source' %}
     <build>
         <plugins>
             <plugin>
@@ -52,4 +52,5 @@
             </plugin>
         </plugins>
     </build>
+    {%- endif %}
 </project>

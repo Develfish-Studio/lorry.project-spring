@@ -11,8 +11,8 @@ import studio.develfish.guppy.events.api.GuppyEvent;
 import studio.develfish.guppy.common.context.service.EvaluatorService;
 import studio.develfish.guppy.common.context.service.GeneratorService;
 import studio.develfish.guppy.query.context.criteria.SpecificationBuilder;
-import studio.develfish.guppy.web.mvc.api.GuppyValidate;
-import studio.develfish.guppy.web.mvc.context.service.GuppyConversionService;
+import studio.develfish.guppy.web.api.GuppyValidate;
+import studio.develfish.guppy.web.context.service.GuppyConversionService;
 
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.jpa.domain.Specification;

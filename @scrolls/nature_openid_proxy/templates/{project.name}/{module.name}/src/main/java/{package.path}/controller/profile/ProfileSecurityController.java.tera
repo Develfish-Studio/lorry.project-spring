@@ -1,0 +1,38 @@
+package {{package.name}}.controller.profile;
+
+import module java.base;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import studio.develfish.guppy.openid.proxy.api.OpenidProxyService;
+
+@RestController
+@Tag(name = "Security")
+@RequestMapping("/security")
+@RequiredArgsConstructor
+public class ProfileSecurityController {
+
+    @GetMapping("/me/jwt")
+    @PreAuthorize("isAuthenticated()")
+    @SecurityRequirement(name = "Bearer")
+    @Operation(summary = "Get JWT data")
+    public Jwt jwt(Principal principal) {
+        return ((JwtAuthenticationToken) principal).getToken();
+    }
+
+    @GetMapping("/me/principal")
+    @PreAuthorize("isAuthenticated()")
+    @SecurityRequirement(name = "Bearer")
+    @Operation(summary = "Get principal data")
+    public OpenidProxyService.PrincipalModel principalModel(@Parameter(hidden = true) OpenidProxyService.PrincipalModel principalModel) {
+        return principalModel;
+    }
+}

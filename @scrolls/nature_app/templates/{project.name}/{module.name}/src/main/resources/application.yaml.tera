@@ -4,3 +4,9 @@ spring:
   config:
     import:
       - optional:classpath:service-{{module.name}}.yaml
+
+springdoc:
+  api:
+    title: {{api.title}}
+    description: {{api.description}}
+    version: {{api.version}}
